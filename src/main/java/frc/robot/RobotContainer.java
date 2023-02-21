@@ -6,7 +6,15 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Drivetrain;
+
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 //import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -19,6 +27,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+  private final double kChasisWidthMeters = Units.inchesToMeters(24); // TODO: JUST GUESSING
+  private final AHRS m_gyro = new AHRS(Port.kMXP);
+  private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(kChasisWidthMeters);
+  private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), 0, 0);
+  private Pose2d pose = new Pose2d();
+
   private final int m_axisForwardBack = XboxController.Axis.kRightX.value;
   private final int m_axisLeftRight = XboxController.Axis.kLeftY.value;
   private final XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
@@ -28,6 +42,10 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+  }
+
+  public void robotPeriodic() {
+    pose = odometry.update(m_gyro.getRotation2d(), m_robotDrive.getLeftDistanceMeters(), m_robotDrive.getRightDistanceMeters());
   }
 
   public void teleopInit() {
@@ -54,7 +72,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
+    
   }
 
   /**
