@@ -6,8 +6,12 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Drivetrain;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
 import edu.wpi.first.wpilibj.XboxController;
-//import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -25,9 +29,12 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private final Drivetrain m_robotDrive = new Drivetrain();
+  SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    loadTrajectories(m_chooser);
+    SmartDashboard.putData("Auton Chooser", m_chooser);
   }
 
   public void teleopInit() {
@@ -57,14 +64,22 @@ public class RobotContainer {
 
   }
 
+  private void loadTrajectories(SendableChooser<Command> chooser) {
+    var path1 = PathPlanner.loadPath("TestPath1", new PathConstraints(4, 3));
+    //chooser.setDefaultOption("Path 1",);
+
+    var path2 = PathPlanner.loadPath("TestPath2", new PathConstraints(4, 3));
+    //chooser.addOption("Path 2",);
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
-   
+   */
   public Command getAutonomousCommand() {
     // A command will be run in autonomous
-
+    m_robotDrive.reset();
+    return m_chooser.getSelected();
   }
-  */
 }
