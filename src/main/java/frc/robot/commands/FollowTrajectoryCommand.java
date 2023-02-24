@@ -11,6 +11,7 @@ import frc.robot.subsystems.Drivetrain;
 
 public class FollowTrajectoryCommand extends RamseteCommand {
     private Drivetrain drivetrain;
+    private Trajectory trajectory;
 
     public FollowTrajectoryCommand(Supplier<Pose2d> getPose, DifferentialDriveKinematics kinematics, Drivetrain drivetrain, Trajectory trajectory) {
         super(
@@ -26,10 +27,16 @@ public class FollowTrajectoryCommand extends RamseteCommand {
             drivetrain
         );
         this.drivetrain = drivetrain;
+        this.trajectory = trajectory;
     }
 
     @Override
     public void initialize() {
+        // set the robots pose to the initial post of the trajectory.
+        // how do we do that (could pass in a Consumer<Pose2d> from robot container)
+        // but how do we keep it from getting updated in RobotContainer.robotPeriodic?
+        // might need to look at some examples.
+        // the odometry.resetPosition might be helpful?
         drivetrain.reset();
         // drivetrain.setDriveSafety(false); // https://www.chiefdelphi.com/t/bug-or-misunderstanding-in-trajectory-tutorial-and-ramsete-example/373989/5
         super.initialize();
