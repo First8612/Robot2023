@@ -19,19 +19,13 @@ public class Turntable extends SubsystemBase {
         motorSpeed = -0.8;
     }  
 
-    public void disableTable() {
-        buttonPressed = "stop";
-        motorSpeed = 0.0;
-    }  
-
     @Override
     public void periodic() {
-        if (buttonPressed == "forward")
-        m_turntableMotor.set(motorSpeed);
-        else if (buttonPressed == "backward")
-        m_turntableMotor.set(motorSpeed);
-        else if (buttonPressed == "stop")
-        m_turntableMotor.set(motorSpeed);
+        if (buttonPressed == "forward") {
+            m_turntableMotor.set(motorSpeed);
+        } else if (buttonPressed == "backward"){
+            m_turntableMotor.set(motorSpeed);
+        }
     }
     
 }

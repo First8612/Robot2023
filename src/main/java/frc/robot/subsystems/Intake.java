@@ -29,18 +29,11 @@ public class Intake extends SubsystemBase {
         motorSpeed = -0.2;
     }
 
-    public void stopSpin() {
-        intakeStatus = "Stopped";
-        motorSpeed = 0;
-    }
-
     @Override
     public void periodic() {
         if (intakeStatus == "In") {
             m_intakeMotor.set(motorSpeed);
         } else if (intakeStatus == "Out") {
-            m_intakeMotor.set(motorSpeed);
-        } else if (intakeStatus == "Stopped") {
             m_intakeMotor.set(motorSpeed);
         } else if (intakeStatus == "Slow In") {
             m_intakeMotor.set(motorSpeed);

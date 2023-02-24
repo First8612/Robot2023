@@ -61,7 +61,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void arcadeDrive(double speed, double rotation) {
-        m_robotDrive.arcadeDrive(speed, -rotation * 0.5);
+        m_robotDrive.arcadeDrive(speed * 0.75, -rotation * 0.5);
     }
 
     public void setMaxSpeed(double maxOutput) {
