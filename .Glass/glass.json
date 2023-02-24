@@ -24,6 +24,11 @@
           "visible": true
         }
       },
+      "/SmartDashboard/Auton Chooser": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Field": {
         "window": {
           "visible": true

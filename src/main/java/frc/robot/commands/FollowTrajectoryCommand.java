@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.controller.RamseteController;
@@ -12,8 +13,9 @@ import frc.robot.subsystems.Drivetrain;
 public class FollowTrajectoryCommand extends RamseteCommand {
     private Drivetrain drivetrain;
     private Trajectory trajectory;
+    private Consumer<Pose2d> setPose;
 
-    public FollowTrajectoryCommand(Supplier<Pose2d> getPose, DifferentialDriveKinematics kinematics, Drivetrain drivetrain, Trajectory trajectory) {
+    public FollowTrajectoryCommand(Supplier<Pose2d> getPose, Consumer<Pose2d> setPose, DifferentialDriveKinematics kinematics, Drivetrain drivetrain, Trajectory trajectory) {
         super(
             trajectory,
             getPose,
@@ -26,6 +28,7 @@ public class FollowTrajectoryCommand extends RamseteCommand {
             drivetrain::setOutputVolts,
             drivetrain
         );
+        this.setPose = setPose;
         this.drivetrain = drivetrain;
         this.trajectory = trajectory;
     }
@@ -37,6 +40,7 @@ public class FollowTrajectoryCommand extends RamseteCommand {
         // but how do we keep it from getting updated in RobotContainer.robotPeriodic?
         // might need to look at some examples.
         // the odometry.resetPosition might be helpful?
+        setPose.accept(trajectory.getInitialPose());
         drivetrain.reset();
         // drivetrain.setDriveSafety(false); // https://www.chiefdelphi.com/t/bug-or-misunderstanding-in-trajectory-tutorial-and-ramsete-example/373989/5
         super.initialize();

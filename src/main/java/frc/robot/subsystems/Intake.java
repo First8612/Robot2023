@@ -11,11 +11,21 @@ public class Intake extends SubsystemBase {
 
     public void spinIn() {
         intakeStatus = "In";
-        motorSpeed = 0.2;
+        motorSpeed = 0.5;
     }
 
     public void spinOut() {
         intakeStatus = "Out";
+        motorSpeed = -0.5;
+    }
+
+    public void slowIn() {
+        intakeStatus = "Slow In";
+        motorSpeed = 0.2;
+    }
+
+    public void slowOut() {
+        intakeStatus = "Slow Out";
         motorSpeed = -0.2;
     }
 
@@ -31,6 +41,10 @@ public class Intake extends SubsystemBase {
         } else if (intakeStatus == "Out") {
             m_intakeMotor.set(motorSpeed);
         } else if (intakeStatus == "Stopped") {
+            m_intakeMotor.set(motorSpeed);
+        } else if (intakeStatus == "Slow In") {
+            m_intakeMotor.set(motorSpeed);
+        } else if (intakeStatus == "Slow Out") {
             m_intakeMotor.set(motorSpeed);
         }
     }

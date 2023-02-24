@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.FollowTrajectoryCommand;
 import frc.robot.subsystems.*;
+import java.util.function.Consumer;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,7 +18,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
-
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-//import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -46,8 +46,12 @@ public class RobotContainer {
   private final int m_axisForwardBack = XboxController.Axis.kRightX.value;
   private final int m_axisLeftRight = XboxController.Axis.kLeftY.value;
   private final XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
-  private final POVButton m_intakeIn = new POVButton(m_driverController, 270);
-  private final POVButton m_intakeOut = new POVButton(m_driverController, 0);
+  private final POVButton m_intakeInCone = new POVButton(m_driverController, 270);
+  private final POVButton m_intakeOutCone = new POVButton(m_driverController, 0);
+  private final JoystickButton m_intakeInCube = new JoystickButton(m_driverController, XboxController.Button.kY.value);
+  private final JoystickButton m_intakeOutCube = new JoystickButton(m_driverController, XboxController.Button.kA.value);
+  private final POVButton m_turntableForwardButton = new POVButton(m_driverController, 90);
+  private final POVButton m_turntableBackwardButton = new POVButton(m_driverController, 360);
 
   private Field2d field = new Field2d();
   private CommandBase resetPosition;
@@ -55,6 +59,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...  
   private final Drivetrain m_robotDrive = new Drivetrain();
   private final Intake m_intake = new Intake();
+  private final Turntable m_turntable = new Turntable();
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -103,30 +108,64 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_intakeIn.onTrue(new InstantCommand(() -> {
+    m_intakeInCone.onTrue(new InstantCommand(() -> {
       m_intake.spinIn();
     }));
 
-    m_intakeIn.onFalse(new InstantCommand(() -> {
+    m_intakeInCone.onFalse(new InstantCommand(() -> {
       m_intake.stopSpin();
     }));
 
-    m_intakeOut.onTrue(new InstantCommand(() -> {
+    m_intakeOutCone.onTrue(new InstantCommand(() -> {
       m_intake.spinOut();
     }));
 
-    m_intakeOut.onFalse(new InstantCommand(() -> {
+    m_intakeOutCone.onFalse(new InstantCommand(() -> {
       m_intake.stopSpin();
+    }));
+
+    m_intakeInCube.onTrue(new InstantCommand(() -> {
+      m_intake.slowIn();
+    }));
+
+    m_intakeInCube.onFalse(new InstantCommand(() -> {
+      m_intake.stopSpin();
+    }));
+
+    m_intakeOutCube.onTrue(new InstantCommand(() -> {
+      m_intake.slowOut();
+    }));
+
+    m_intakeOutCube.onFalse(new InstantCommand(() -> {
+      m_intake.stopSpin();
+    }));
+
+    m_turntableForwardButton.onTrue(new InstantCommand(() -> {
+      m_turntable.enableForwardTable();
+    }));
+
+    m_turntableForwardButton.onFalse(new InstantCommand(() -> {
+      m_turntable.disableTable();
+    }));
+  
+    m_turntableBackwardButton.onTrue(new InstantCommand(() -> {
+      m_turntable.enableBackwardTable();
+    }));
+
+    m_turntableBackwardButton.onFalse(new InstantCommand(() -> {
+      m_turntable.disableTable();
     }));
   }
 
   private void loadTrajectories(SendableChooser<Command> chooser) {
-    var path1 = PathPlanner.loadPath("TestPath1", new PathConstraints(.2, .2));
-    var trajectory1Command = new FollowTrajectoryCommand(() -> pose, kinematics, m_robotDrive, path1);
+    Consumer<Pose2d> setPose = pose -> odometry.resetPosition(new Rotation2d(), 0, 0, pose);
+
+    var path1 = PathPlanner.loadPath("TestPath1", new PathConstraints(.5, .3));
+    var trajectory1Command = new FollowTrajectoryCommand(() -> pose, setPose, kinematics, m_robotDrive, path1);
     chooser.setDefaultOption("Path 1", trajectory1Command);
 
-    var path2 = PathPlanner.loadPath("TestPath2", new PathConstraints(.3, .3));
-    var trajectory2Command = new FollowTrajectoryCommand(() -> pose, kinematics, m_robotDrive, path2);
+    var path2 = PathPlanner.loadPath("TestPath2", new PathConstraints(.5, .3));
+    var trajectory2Command = new FollowTrajectoryCommand(() -> pose, setPose, kinematics, m_robotDrive, path2);
     chooser.addOption("Path 2", trajectory2Command);
   }
 
