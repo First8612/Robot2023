@@ -43,8 +43,8 @@ public class RobotContainer {
   private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), 0, 0);
   private Pose2d pose = new Pose2d();
 
-  private final int m_axisForwardBack = XboxController.Axis.kRightX.value;
-  private final int m_axisLeftRight = XboxController.Axis.kLeftY.value;
+  private final int m_axisForwardBack = XboxController.Axis.kLeftY.value;
+  private final int m_axisLeftRight = XboxController.Axis.kRightX.value;
   private final XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
   private final POVButton m_intakeInCone = new POVButton(m_driverController, 270);
   private final POVButton m_intakeOutCone = new POVButton(m_driverController, 0);
@@ -75,6 +75,7 @@ public class RobotContainer {
     }).withName("Reset Position");
 
     SmartDashboard.putData(resetPosition);
+    resetPosition.schedule();
   }
 
   public void robotPeriodic() {
@@ -91,8 +92,8 @@ public class RobotContainer {
     m_robotDrive.setDefaultCommand(
       new RunCommand(
         () -> {
-          double speed = m_driverController.getRawAxis(m_axisForwardBack);
-          double rotation = m_driverController.getRawAxis(m_axisLeftRight);
+          double speed = m_driverController.getRawAxis(m_axisLeftRight);
+          double rotation = m_driverController.getRawAxis(m_axisForwardBack);
           m_robotDrive.arcadeDrive(-speed, rotation); 
         },
         m_robotDrive));
@@ -108,52 +109,28 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_intakeInCone.onTrue(new InstantCommand(() -> {
+    m_intakeInCone.whileTrue(new RunCommand(() -> {
       m_intake.spinIn();
     }));
 
-    m_intakeInCone.onFalse(new InstantCommand(() -> {
-      m_intake.stopSpin();
-    }));
-
-    m_intakeOutCone.onTrue(new InstantCommand(() -> {
+    m_intakeOutCone.whileTrue(new RunCommand(() -> {
       m_intake.spinOut();
     }));
 
-    m_intakeOutCone.onFalse(new InstantCommand(() -> {
-      m_intake.stopSpin();
-    }));
-
-    m_intakeInCube.onTrue(new InstantCommand(() -> {
+    m_intakeInCube.whileTrue(new RunCommand(() -> {
       m_intake.slowIn();
     }));
 
-    m_intakeInCube.onFalse(new InstantCommand(() -> {
-      m_intake.stopSpin();
-    }));
-
-    m_intakeOutCube.onTrue(new InstantCommand(() -> {
+    m_intakeOutCube.whileTrue(new RunCommand(() -> {
       m_intake.slowOut();
     }));
 
-    m_intakeOutCube.onFalse(new InstantCommand(() -> {
-      m_intake.stopSpin();
-    }));
-
-    m_turntableForwardButton.onTrue(new InstantCommand(() -> {
+    m_turntableForwardButton.whileTrue(new RunCommand(() -> {
       m_turntable.enableForwardTable();
     }));
-
-    m_turntableForwardButton.onFalse(new InstantCommand(() -> {
-      m_turntable.disableTable();
-    }));
   
-    m_turntableBackwardButton.onTrue(new InstantCommand(() -> {
+    m_turntableBackwardButton.whileTrue(new RunCommand(() -> {
       m_turntable.enableBackwardTable();
-    }));
-
-    m_turntableBackwardButton.onFalse(new InstantCommand(() -> {
-      m_turntable.disableTable();
     }));
   }
 
