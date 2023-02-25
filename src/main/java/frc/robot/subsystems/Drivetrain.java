@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-//import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -23,6 +23,8 @@ public class Drivetrain extends SubsystemBase {
     private static WPI_TalonFX[] m_motors = { m_leftMotor, m_leftFollower, m_rightMotor, m_rightFollower };
     private final MotorControllerGroup m_leftMotors = new MotorControllerGroup(m_leftMotor, m_leftFollower);
     private final MotorControllerGroup m_rightMotors = new MotorControllerGroup(m_rightMotor, m_rightFollower);
+    private final SlewRateLimiter filterForwardBack = new SlewRateLimiter(0.5);
+    private final SlewRateLimiter filterRotation = new SlewRateLimiter(0.5);
 
     private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
@@ -61,7 +63,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void arcadeDrive(double speed, double rotation) {
-        m_robotDrive.arcadeDrive(speed * 0.75, -rotation * 0.5);
+        m_robotDrive.arcadeDrive(filterForwardBack.calculate(speed * 0.75), filterRotation.calculate(-rotation * 0.5));
     }
 
     public void setMaxSpeed(double maxOutput) {

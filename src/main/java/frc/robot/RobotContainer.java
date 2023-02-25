@@ -52,6 +52,7 @@ public class RobotContainer {
   private final JoystickButton m_intakeOutCube = new JoystickButton(m_driverController, XboxController.Button.kA.value);
   private final POVButton m_turntableForwardButton = new POVButton(m_driverController, 90);
   private final POVButton m_turntableBackwardButton = new POVButton(m_driverController, 360);
+  private final JoystickButton m_intakeToggle = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
 
   private Field2d field = new Field2d();
   private CommandBase resetPosition;
@@ -60,6 +61,7 @@ public class RobotContainer {
   private final Drivetrain m_robotDrive = new Drivetrain();
   private final Intake m_intake = new Intake();
   private final Turntable m_turntable = new Turntable();
+  //private final Pneumatics m_pneumatics = new Pneumatics();
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -131,6 +133,10 @@ public class RobotContainer {
   
     m_turntableBackwardButton.whileTrue(new RunCommand(() -> {
       m_turntable.enableBackwardTable();
+    }));
+
+    m_intakeToggle.onTrue(new InstantCommand(() -> {
+      m_intake.toggleIntake();
     }));
   }
 
