@@ -28,7 +28,7 @@ public class Drivetrain extends SubsystemBase {
 
     private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
-    private final SimpleMotorFeedforward m_feedForward = new SimpleMotorFeedforward(0.086571, 1.9726);
+    private final SimpleMotorFeedforward m_feedForward = new SimpleMotorFeedforward(0.086571, 1.9726, 0.18671);
 
     private final double p = 0.23126, i = 0, d = 0; // TODO: tune these
     private final PIDController m_leftPIDController = new PIDController(p, i, d);
@@ -61,7 +61,11 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void arcadeDrive(double speed, double rotation) {
-        m_robotDrive.arcadeDrive(filterForwardBack.calculate(speed * 0.75), filterRotation.calculate(-rotation * 0.5));
+        var slewSpeed = filterForwardBack.calculate(speed * 0.75);
+        var slewRotate = filterRotation.calculate(-rotation * 0.5);
+        var feedSpeed = m_feedForward.calculate(slewSpeed);
+        var feedRotate = m_feedForward.calculate(slewRotate);
+        m_robotDrive.arcadeDrive(feedSpeed / 12.0, feedRotate / 12.0);
     }
 
     public void setMaxSpeed(double maxOutput) {
