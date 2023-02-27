@@ -47,17 +47,18 @@ public class RobotContainer {
   private final int m_axisForwardBack = XboxController.Axis.kLeftY.value;
   private final int m_axisLeftRight = XboxController.Axis.kRightX.value;
   private final XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
+  private final XboxController m_operatorController = new XboxController(1);
 
-  private final POVButton m_intakeInCone = new POVButton(m_driverController, 270);
-  private final POVButton m_intakeOutCone = new POVButton(m_driverController, 0);
-  private final JoystickButton m_intakeInCube = new JoystickButton(m_driverController, XboxController.Button.kY.value);
-  private final JoystickButton m_intakeOutCube = new JoystickButton(m_driverController, XboxController.Button.kA.value);
-  private final JoystickButton m_intakeToggle = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
+  private final POVButton m_intakeInCone = new POVButton(m_operatorController, 270);
+  private final POVButton m_intakeOutCone = new POVButton(m_operatorController, 0);
+  private final JoystickButton m_intakeInCube = new JoystickButton(m_operatorController, XboxController.Button.kY.value);
+  private final JoystickButton m_intakeOutCube = new JoystickButton(m_operatorController, XboxController.Button.kA.value);
+  private final JoystickButton m_intakeToggle = new JoystickButton(m_operatorController, XboxController.Button.kLeftBumper.value);
 
-  private final POVButton m_turntableForwardButton = new POVButton(m_driverController, 90);
-  private final POVButton m_turntableBackwardButton = new POVButton(m_driverController, 360);
+  private final POVButton m_turntableForwardButton = new POVButton(m_operatorController, 90);
+  private final POVButton m_turntableBackwardButton = new POVButton(m_operatorController, 360);
 
-  private final JoystickButton m_balanceButton = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
+  private final JoystickButton m_balanceButton = new JoystickButton(m_operatorController, XboxController.Button.kRightBumper.value);
 
   private Field2d field = new Field2d();
   private CommandBase resetPosition;
