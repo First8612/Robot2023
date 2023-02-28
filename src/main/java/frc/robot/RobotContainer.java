@@ -4,9 +4,9 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.FollowTrajectoryCommand;
+import frc.robot.commands.Intake.IntakeSpeedCommand;
 import frc.robot.subsystems.*;
 import java.util.function.Consumer;
 import com.kauailabs.navx.frc.AHRS;
@@ -46,17 +46,18 @@ public class RobotContainer {
 
   private final int m_axisForwardBack = XboxController.Axis.kLeftY.value;
   private final int m_axisLeftRight = XboxController.Axis.kRightX.value;
-  private final XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
+  private final int m_intakeAxis = XboxController.Axis.kLeftY.value;
+  private final XboxController m_driverController = new XboxController(0);
   private final XboxController m_operatorController = new XboxController(1);
 
-  private final POVButton m_intakeInCone = new POVButton(m_operatorController, 270);
   private final POVButton m_intakeOutCone = new POVButton(m_operatorController, 0);
-  private final JoystickButton m_intakeInCube = new JoystickButton(m_operatorController, XboxController.Button.kY.value);
-  private final JoystickButton m_intakeOutCube = new JoystickButton(m_operatorController, XboxController.Button.kA.value);
+  private final POVButton m_intakeInCone = new POVButton(m_operatorController, 180);
+  private final JoystickButton m_intakeOutCube = new JoystickButton(m_operatorController, XboxController.Button.kY.value);
+  private final JoystickButton m_intakeInCube = new JoystickButton(m_operatorController, XboxController.Button.kA.value);
   private final JoystickButton m_intakeToggle = new JoystickButton(m_operatorController, XboxController.Button.kLeftBumper.value);
 
   private final POVButton m_turntableForwardButton = new POVButton(m_operatorController, 90);
-  private final POVButton m_turntableBackwardButton = new POVButton(m_operatorController, 360);
+  private final POVButton m_turntableBackwardButton = new POVButton(m_operatorController, 270);
 
   private final JoystickButton m_balanceButton = new JoystickButton(m_operatorController, XboxController.Button.kRightBumper.value);
 
@@ -105,6 +106,13 @@ public class RobotContainer {
           m_robotDrive.arcadeDrive(-speed, rotation); 
         },
         m_robotDrive));
+
+    m_intake.setDefaultCommand(
+      new RunCommand(() -> {
+        m_intake.setSpeed(m_operatorController.getRawAxis(m_intakeAxis));
+      },
+      m_intake
+    ));
   }
 
   /**
@@ -117,21 +125,13 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_intakeInCone.whileTrue(new RunCommand(() -> {
-      m_intake.spinIn();
-    }));
+    m_intakeInCone.whileTrue(new IntakeSpeedCommand(0.5, m_intake));
 
-    m_intakeOutCone.whileTrue(new RunCommand(() -> {
-      m_intake.spinOut();
-    }));
+    m_intakeOutCone.whileTrue(new IntakeSpeedCommand(-0.5, m_intake));
 
-    m_intakeInCube.whileTrue(new RunCommand(() -> {
-      m_intake.slowIn();
-    }));
+    m_intakeInCube.whileTrue(new IntakeSpeedCommand(0.2, m_intake));
 
-    m_intakeOutCube.whileTrue(new RunCommand(() -> {
-      m_intake.slowOut();
-    }));
+    m_intakeOutCube.whileTrue(new IntakeSpeedCommand(-0.2, m_intake));
 
     m_turntableForwardButton.whileTrue(new RunCommand(() -> {
       m_turntable.enableForwardTable();
