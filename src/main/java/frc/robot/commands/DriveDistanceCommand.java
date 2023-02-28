@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
@@ -11,34 +13,46 @@ import frc.robot.subsystems.Drivetrain;
 public class DriveDistanceCommand extends CommandBase {
     private Drivetrain drivetrain;
     private double distanceMeters;
-    private double startingDistanceLeft;
-    private double startingDistanceRight;
+    private double startingDistance;
+    private double startingRotation;
 
-    public DriveDistanceCommand(double distanceMeters, Drivetrain drivetrain) {
+    private PIDController speedController;
+    private PIDController rotationController;
+    private Gyro gyro;
+
+    public DriveDistanceCommand(double distanceMeters, Drivetrain drivetrain, Gyro gyro) {
         super();
         this.distanceMeters = distanceMeters;
         this.drivetrain = drivetrain;
+        this.gyro = gyro;
+
+        speedController = new PIDController(10, 0, 0);
+        rotationController = new PIDController(.03, 0, 0);
+    }
+
+    private double getAverageDistance() {
+        return (this.drivetrain.getLeftDistanceMeters() + this.drivetrain.getRightDistanceMeters()) / 2;
     }
 
     @Override
     public void initialize() {
         super.initialize();
 
-        startingDistanceLeft = this.drivetrain.getLeftDistanceMeters();
-        startingDistanceRight = this.drivetrain.getRightDistanceMeters();
+        startingDistance = getAverageDistance();
+        startingRotation = gyro.getAngle();
     }
 
     @Override
     public void execute() {
         super.execute();
 
-        var leftDistanceToGo = (distanceMeters - startingDistanceLeft) - (drivetrain.getLeftDistanceMeters() - startingDistanceLeft);
-        var leftSpeed = drivetrain.getLeftPIDController().calculate(leftDistanceToGo);
-       
-        var rightDistanceToGo = (distanceMeters - startingDistanceRight) - (drivetrain.getRightDistanceMeters() - startingDistanceRight);
-        var rightSpeed = drivetrain.getRightPIDController().calculate(rightDistanceToGo);
- 
-        drivetrain.setOutputVolts(leftSpeed, rightSpeed);
+        var distanceToGo = (distanceMeters - startingDistance) - (getAverageDistance() - startingDistance);
+        var speed = speedController.calculate(distanceToGo);
+
+        var rotationError = startingRotation - gyro.getAngle();
+        var rotation = rotationController.calculate(rotationError);
+
+        drivetrain.arcadeDrive(-speed, rotation);
     }
 
     @Override
