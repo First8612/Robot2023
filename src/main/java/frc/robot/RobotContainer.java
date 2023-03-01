@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -50,15 +51,9 @@ public class RobotContainer {
   private final XboxController m_driverController = new XboxController(0);
   private final XboxController m_operatorController = new XboxController(1);
 
-  private final POVButton m_intakeOutCone = new POVButton(m_operatorController, 0);
-  private final POVButton m_intakeInCone = new POVButton(m_operatorController, 180);
-  private final JoystickButton m_intakeOutCube = new JoystickButton(m_operatorController, XboxController.Button.kY.value);
-  private final JoystickButton m_intakeInCube = new JoystickButton(m_operatorController, XboxController.Button.kA.value);
   private final JoystickButton m_intakeToggle = new JoystickButton(m_operatorController, XboxController.Button.kLeftBumper.value);
-
   private final POVButton m_turntableForwardButton = new POVButton(m_operatorController, 90);
   private final POVButton m_turntableBackwardButton = new POVButton(m_operatorController, 270);
-
   private final JoystickButton m_balanceButton = new JoystickButton(m_operatorController, XboxController.Button.kRightBumper.value);
 
   private Field2d field = new Field2d();
@@ -73,8 +68,8 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    loadTrajectories(m_chooser);
-    SmartDashboard.putData("Auton Chooser", m_chooser);
+    //loadTrajectories(m_chooser);
+    //SmartDashboard.putData("Auton Chooser", m_chooser);
     SmartDashboard.putData(field);
 
     this.resetPosition = new InstantCommand(() -> {
@@ -125,13 +120,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_intakeInCone.whileTrue(new IntakeSpeedCommand(0.5, m_intake));
-
-    m_intakeOutCone.whileTrue(new IntakeSpeedCommand(-0.5, m_intake));
-
-    m_intakeInCube.whileTrue(new IntakeSpeedCommand(0.2, m_intake));
-
-    m_intakeOutCube.whileTrue(new IntakeSpeedCommand(-0.2, m_intake));
 
     m_turntableForwardButton.whileTrue(new RunCommand(() -> {
       m_turntable.enableForwardTable();
@@ -148,7 +136,7 @@ public class RobotContainer {
     m_balanceButton.onTrue(m_balance);
   }
 
-  private void loadTrajectories(SendableChooser<Command> chooser) {
+  /*private void loadTrajectories(SendableChooser<Command> chooser) {
     Consumer<Pose2d> setPose = pose -> odometry.resetPosition(new Rotation2d(), 0, 0, pose);
 
     var path1 = PathPlanner.loadPath("TestPath1", new PathConstraints(.5, .3));
@@ -158,7 +146,7 @@ public class RobotContainer {
     var path2 = PathPlanner.loadPath("TestPath2", new PathConstraints(.5, .3));
     var trajectory2Command = new FollowTrajectoryCommand(() -> pose, setPose, kinematics, m_robotDrive, path2);
     chooser.addOption("Path 2", trajectory2Command);
-  }
+  } */
 
 
   /**
