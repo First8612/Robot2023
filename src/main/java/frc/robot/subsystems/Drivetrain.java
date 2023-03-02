@@ -38,7 +38,8 @@ public class Drivetrain extends SubsystemBase {
 
     public Drivetrain() {
         m_rightMotor.setInverted(false);
-        m_leftMotor.setInverted(false);
+        m_leftMotor.setInverted(true);
+        m_leftFollower.setInverted(true);
         m_leftFollower.follow(m_leftMotor);
         m_rightFollower.follow(m_rightMotor);
     }
@@ -61,11 +62,11 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void arcadeDrive(double speed, double rotation) {
-        var slewSpeed = filterForwardBack.calculate(speed);
-        var slewRotate = filterRotation.calculate(-rotation);
+        //var slewSpeed = filterForwardBack.calculate(speed);
+        //var slewRotate = filterRotation.calculate(-rotation);
         // var feedSpeed = m_feedForward.calculate(slewSpeed);
         // var feedRotate = m_feedForward.calculate(slewRotate);
-        m_robotDrive.arcadeDrive(slewSpeed, slewRotate);
+        m_robotDrive.arcadeDrive(speed, -rotation);
     }
 
     public void setMaxSpeed(double maxOutput) {

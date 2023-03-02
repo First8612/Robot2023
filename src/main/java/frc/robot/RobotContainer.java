@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.FollowTrajectoryCommand;
+import frc.robot.commands.Autonomous.*;
 import frc.robot.commands.Intake.IntakeSpeedCommand;
 import frc.robot.subsystems.*;
 import java.util.function.Consumer;
@@ -64,12 +65,20 @@ public class RobotContainer {
   private final Intake m_intake = new Intake();
   private final Turntable m_turntable = new Turntable();
   private final BalanceCommand m_balance = new BalanceCommand(m_gyro, m_robotDrive);
+  private final Auton1 m_auton1 = new Auton1(m_robotDrive, m_intake, m_gyro);
+  private final Auton2 m_auton2 = new Auton2(m_robotDrive, m_intake, m_gyro);
+  private final Auton3 m_auton3 = new Auton3(m_robotDrive, m_intake, m_gyro);
+  private final TestAuton m_testAuton = new TestAuton(m_robotDrive, m_intake, m_gyro);
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     //loadTrajectories(m_chooser);
-    //SmartDashboard.putData("Auton Chooser", m_chooser);
+    m_chooser.setDefaultOption("Auton1", m_auton1);
+    m_chooser.addOption("Auton2", m_auton2);
+    m_chooser.addOption("Auton3", m_auton3);
+    m_chooser.addOption("TestAuton", m_testAuton);
+    SmartDashboard.putData("Auton Chooser", m_chooser);
     SmartDashboard.putData(field);
 
     this.resetPosition = new InstantCommand(() -> {
@@ -85,6 +94,7 @@ public class RobotContainer {
   public void robotPeriodic() {
     pose = odometry.update(m_gyro.getRotation2d(), m_robotDrive.getLeftDistanceMeters(), m_robotDrive.getRightDistanceMeters());
     field.setRobotPose(pose);
+    SmartDashboard.putNumber("Gyro Y Value", m_gyro.getPitch());
   }
 
   public void teleopInit() {
@@ -96,18 +106,21 @@ public class RobotContainer {
     m_robotDrive.setDefaultCommand(
       new RunCommand(
         () -> {
-          double speed = m_driverController.getRawAxis(m_axisLeftRight);
-          double rotation = m_driverController.getRawAxis(m_axisForwardBack);
-          m_robotDrive.arcadeDrive(-speed, rotation); 
+          double speed = m_driverController.getRawAxis(m_axisForwardBack);
+          double rotation = m_driverController.getRawAxis(m_axisLeftRight);
+          m_robotDrive.arcadeDrive(-speed * 0.75, rotation * 0.5); 
         },
         m_robotDrive));
 
     m_intake.setDefaultCommand(
       new RunCommand(() -> {
-        m_intake.setSpeed(m_operatorController.getRawAxis(m_intakeAxis));
+          m_intake.setSpeed(m_operatorController.getRawAxis(m_intakeAxis));
       },
-      m_intake
-    ));
+      m_intake));
+  }
+
+  public void autonomousInit() {
+    m_gyro.reset();
   }
 
   /**

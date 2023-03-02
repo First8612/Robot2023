@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -18,6 +19,7 @@ public class Intake extends SubsystemBase {
         super();
 
         m_intakeSolenoid.set(Value.kForward);
+        m_intakeMotor.setIdleMode(IdleMode.kBrake);
     }
 
     public void toggleIntake() {
