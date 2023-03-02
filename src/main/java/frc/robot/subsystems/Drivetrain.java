@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.filter.SlewRateLimiter;
+//import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -23,14 +23,14 @@ public class Drivetrain extends SubsystemBase {
     private static WPI_TalonFX[] m_motors = { m_leftMotor, m_leftFollower, m_rightMotor, m_rightFollower };
     private final MotorControllerGroup m_leftMotors = new MotorControllerGroup(m_leftMotor, m_leftFollower);
     private final MotorControllerGroup m_rightMotors = new MotorControllerGroup(m_rightMotor, m_rightFollower);
-    private final SlewRateLimiter filterForwardBack = new SlewRateLimiter(10);
-    private final SlewRateLimiter filterRotation = new SlewRateLimiter(0.5);
+    //private final SlewRateLimiter filterForwardBack = new SlewRateLimiter(10);
+    //private final SlewRateLimiter filterRotation = new SlewRateLimiter(0.5);
 
     private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
     private final SimpleMotorFeedforward m_feedForward = new SimpleMotorFeedforward(0.086571, 1.9726, 0.18671);
 
-    private final double p = 0.23126, i = 0, d = 0; // TODO: tune these
+    private final double p = 0.23126, i = 0, d = 0;
     private final PIDController m_leftPIDController = new PIDController(p, i, d);
     private final PIDController m_rightPIDController = new PIDController(p, i, d);
   

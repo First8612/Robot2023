@@ -6,11 +6,13 @@ import frc.robot.commands.*;
 import frc.robot.commands.Intake.IntakeSpeedCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
+import java.util.function.Supplier;
 import com.kauailabs.navx.frc.AHRS;
 
 public class Auton1 extends SequentialCommandGroup {
 
-    public Auton1(Drivetrain drivetrain, Intake intake, AHRS gyro) {
+    public Auton1(Drivetrain drivetrain, Intake intake, AHRS gyro, Supplier<Boolean> isRedAlliance) {
+
         addRequirements(drivetrain);
         addRequirements(intake);
         addCommands(
@@ -23,11 +25,11 @@ public class Auton1 extends SequentialCommandGroup {
             //drive forward until past the charge station
             new DriveDistanceCommand(4, drivetrain, gyro),
             //turn -90 degrees
-            new TurnDegreesCommand(0.5, -90, drivetrain, gyro),
+            new TurnDegreesCommand(0.5, 90, drivetrain, gyro, isRedAlliance),
             //drive to be parallel to the charging station
             new DriveDistanceCommand(2, drivetrain, gyro),
             //turn 90 degrees
-            new TurnDegreesCommand(0.5, -90, drivetrain, gyro),
+            new TurnDegreesCommand(0.5, 90, drivetrain, gyro, isRedAlliance),
             //drive until tilted on the charging station
             new DriveUntilTiltCommand(15, 0.5, gyro, drivetrain),
             //balance on the charging station

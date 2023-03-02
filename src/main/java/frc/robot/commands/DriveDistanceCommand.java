@@ -8,12 +8,10 @@ import frc.robot.subsystems.Drivetrain;
 /**
  * Drives a set number of meters and stops. 
  * Uses PID controllers on the drivetrain so it SHOULD correct for straightness.
- * TODO: Does line 36/39 correctly output in the right scale so line 41 can use it right?
  */
 public class DriveDistanceCommand extends CommandBase {
     private Drivetrain drivetrain;
     private double distanceMeters;
-    private double startingDistance;
     private double startingRotation;
 
     private PIDController speedController;
@@ -38,7 +36,6 @@ public class DriveDistanceCommand extends CommandBase {
     public void initialize() {
         super.initialize();
 
-        startingDistance = getAverageDistance();
         startingRotation = gyro.getAngle();
         speedController.setSetpoint(distanceMeters);
     }

@@ -5,28 +5,30 @@
 package frc.robot;
 
 import frc.robot.commands.BalanceCommand;
-import frc.robot.commands.FollowTrajectoryCommand;
+//import frc.robot.commands.FollowTrajectoryCommand;
 import frc.robot.commands.Autonomous.*;
-import frc.robot.commands.Intake.IntakeSpeedCommand;
+//import frc.robot.commands.Intake.IntakeSpeedCommand;
 import frc.robot.subsystems.*;
-import java.util.function.Consumer;
+//import java.util.function.Consumer;
+import java.util.function.Supplier;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+//import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.math.util.Units;
+//import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.SerialPort.Port;
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
+//import com.pathplanner.lib.PathConstraints;
+//import com.pathplanner.lib.PathPlanner;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
+//import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -40,9 +42,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  private final double kChassisWidthMeters = Units.inchesToMeters(23);
+  //private final double kChassisWidthMeters = Units.inchesToMeters(23);
   private final AHRS m_gyro = new AHRS(Port.kMXP);
-  private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(kChassisWidthMeters);
+  //private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(kChassisWidthMeters);
   private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), 0, 0);
   private Pose2d pose = new Pose2d();
 
@@ -65,10 +67,11 @@ public class RobotContainer {
   private final Intake m_intake = new Intake();
   private final Turntable m_turntable = new Turntable();
   private final BalanceCommand m_balance = new BalanceCommand(m_gyro, m_robotDrive);
-  private final Auton1 m_auton1 = new Auton1(m_robotDrive, m_intake, m_gyro);
-  private final Auton2 m_auton2 = new Auton2(m_robotDrive, m_intake, m_gyro);
+  Supplier<Boolean> isRedAllianceSupplier = () -> NetworkTableInstance.getDefault().getEntry("/FMSInfo/IsRedAlliance").getBoolean(false);
+  private final Auton1 m_auton1 = new Auton1(m_robotDrive, m_intake, m_gyro, isRedAllianceSupplier);
+  private final Auton2 m_auton2 = new Auton2(m_robotDrive, m_intake, m_gyro, isRedAllianceSupplier);
   private final Auton3 m_auton3 = new Auton3(m_robotDrive, m_intake, m_gyro);
-  private final TestAuton m_testAuton = new TestAuton(m_robotDrive, m_intake, m_gyro);
+  private final TestAuton m_testAuton = new TestAuton(m_robotDrive, m_intake, m_gyro, isRedAllianceSupplier);
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */

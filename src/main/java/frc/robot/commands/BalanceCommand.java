@@ -20,7 +20,7 @@ public class BalanceCommand extends PIDCommand {
             0, 
             value -> {
                 drivetrain.arcadeDrive(
-                    -value, // drive speed
+                    Math.min(-value, 0.2), // drive speed with ceiling
                     0 // drive rotation
                 );
                 System.out.println(gyro.getPitch());
