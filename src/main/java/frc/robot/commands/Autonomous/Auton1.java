@@ -1,7 +1,6 @@
 package frc.robot.commands.Autonomous;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.*;
 import frc.robot.commands.Intake.IntakeSpeedCommand;
 import frc.robot.subsystems.Drivetrain;
@@ -17,11 +16,7 @@ public class Auton1 extends SequentialCommandGroup {
         addRequirements(intake);
         addCommands(
             //start up intake to eject game piece
-            new IntakeSpeedCommand(0.5, intake),
-            //keep ghe intake going for 1 second
-            new WaitCommand(1),
-            //stop the intake
-            new IntakeSpeedCommand(0, intake),
+            new IntakeSpeedCommand(0.5, 1, intake),
             //drive forward until past the charge station
             new DriveDistanceCommand(-4, drivetrain, gyro),
             //turn -90 degrees

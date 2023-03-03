@@ -3,7 +3,6 @@ package frc.robot.commands.Autonomous;
 import java.util.function.Supplier;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.*;
 import frc.robot.commands.Intake.IntakeSpeedCommand;
 import frc.robot.subsystems.Drivetrain;
@@ -16,11 +15,7 @@ public class Auton2 extends SequentialCommandGroup {
         addRequirements(intake);
         addCommands(
             //start up intake to eject game piece
-            new IntakeSpeedCommand(0.5, intake),
-            //keep ghe intake going for 1 second
-            new WaitCommand(1),
-            //stop the intake
-            new IntakeSpeedCommand(0, intake),
+            new IntakeSpeedCommand(0.5, 1, intake),
             //drive forward until past the charge station
             new DriveDistanceCommand(-2.5, drivetrain, gyro),
             //turn -90 degrees
