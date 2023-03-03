@@ -30,7 +30,7 @@ public class Auton2 extends SequentialCommandGroup {
             //turn 90 degrees
             new TurnDegreesCommand(0.5, -90, drivetrain, gyro, isRedAlliance),
             //drive until tilted on the charging station
-            new DriveUntilTiltCommand(15, 0.5, gyro, drivetrain),
+            new DriveDistanceCommand(1.5, drivetrain, gyro),
             //balance on the charging station
             new BalanceCommand(gyro, drivetrain)
         );

@@ -20,7 +20,7 @@ public class Auton3 extends SequentialCommandGroup {
             //stop the intake
             new IntakeSpeedCommand(0, intake),
              //drive until tilted on the charging station
-             new DriveUntilTiltCommand(15, 0.5, gyro, drivetrain),
+             new DriveDistanceCommand(1.25, drivetrain, gyro),
              //balance on the charging station
              new BalanceCommand(gyro, drivetrain)
         );

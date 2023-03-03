@@ -71,7 +71,6 @@ public class RobotContainer {
   private final Auton1 m_auton1 = new Auton1(m_robotDrive, m_intake, m_gyro, isRedAllianceSupplier);
   private final Auton2 m_auton2 = new Auton2(m_robotDrive, m_intake, m_gyro, isRedAllianceSupplier);
   private final Auton3 m_auton3 = new Auton3(m_robotDrive, m_intake, m_gyro);
-  private final TestAuton m_testAuton = new TestAuton(m_robotDrive, m_intake, m_gyro, isRedAllianceSupplier);
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -80,7 +79,6 @@ public class RobotContainer {
     m_chooser.setDefaultOption("Auton1", m_auton1);
     m_chooser.addOption("Auton2", m_auton2);
     m_chooser.addOption("Auton3", m_auton3);
-    m_chooser.addOption("TestAuton", m_testAuton);
     SmartDashboard.putData("Auton Chooser", m_chooser);
     SmartDashboard.putData(field);
 
