@@ -57,7 +57,7 @@ public class RobotContainer {
   private final JoystickButton m_intakeToggle = new JoystickButton(m_operatorController, XboxController.Button.kLeftBumper.value);
   private final POVButton m_turntableForwardButton = new POVButton(m_operatorController, 90);
   private final POVButton m_turntableBackwardButton = new POVButton(m_operatorController, 270);
-  private final JoystickButton m_balanceButton = new JoystickButton(m_operatorController, XboxController.Button.kRightBumper.value);
+  private final JoystickButton m_balanceButton = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
 
   private Field2d field = new Field2d();
   private CommandBase resetPosition;
