@@ -68,17 +68,19 @@ public class RobotContainer {
   private final Turntable m_turntable = new Turntable();
   private final BalanceCommand m_balance = new BalanceCommand(m_gyro, m_robotDrive);
   Supplier<Boolean> isRedAllianceSupplier = () -> NetworkTableInstance.getDefault().getEntry("/FMSInfo/IsRedAlliance").getBoolean(false);
-  private final Auton1 m_auton1 = new Auton1(m_robotDrive, m_intake, m_gyro, isRedAllianceSupplier);
-  private final Auton2 m_auton2 = new Auton2(m_robotDrive, m_intake, m_gyro, isRedAllianceSupplier);
+  //private final Auton1 m_auton1 = new Auton1(m_robotDrive, m_intake, m_gyro, isRedAllianceSupplier);
+  //private final Auton2 m_auton2 = new Auton2(m_robotDrive, m_intake, m_gyro, isRedAllianceSupplier);
   private final Auton3 m_auton3 = new Auton3(m_robotDrive, m_intake, m_gyro);
+  private final Auton4 m_auton4 = new Auton4(m_robotDrive, m_intake, m_gyro);
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     //loadTrajectories(m_chooser);
-    m_chooser.setDefaultOption("By Driver Station 1", m_auton1);
-    m_chooser.addOption("By Driver Station 2", m_auton3);
-    m_chooser.addOption("By Driver Station 3", m_auton2);
+    //m_chooser.setDefaultOption("By Driver Station 1", m_auton1);
+    m_chooser.setDefaultOption("Balance Auton", m_auton3);
+    m_chooser.addOption("Drive Auton", m_auton4);
+    //m_chooser.addOption("By Driver Station 3", m_auton2);
     SmartDashboard.putData("Auton Chooser", m_chooser);
     SmartDashboard.putData(field);
 
