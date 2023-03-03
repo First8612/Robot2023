@@ -17,7 +17,7 @@ public class Auton2 extends SequentialCommandGroup {
             //start up intake to eject game piece
             new IntakeSpeedCommand(0.5, 1, intake),
             //drive forward until past the charge station
-            new DriveDistanceCommand(-2.5, drivetrain, gyro),
+            new DriveDistanceCommand(-4, drivetrain, gyro),
             //turn -90 degrees
             new TurnDegreesCommand(0.5, -90, drivetrain, gyro, isRedAlliance),
             //drive to be parallel to the charging station

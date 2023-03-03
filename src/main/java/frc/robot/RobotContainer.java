@@ -76,9 +76,9 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     //loadTrajectories(m_chooser);
-    m_chooser.setDefaultOption("Auton1", m_auton1);
-    m_chooser.addOption("Auton2", m_auton2);
-    m_chooser.addOption("Auton3", m_auton3);
+    m_chooser.setDefaultOption("By Driver Station 1", m_auton1);
+    m_chooser.addOption("By Driver Station 2", m_auton3);
+    m_chooser.addOption("By Driver Station 3", m_auton2);
     SmartDashboard.putData("Auton Chooser", m_chooser);
     SmartDashboard.putData(field);
 
