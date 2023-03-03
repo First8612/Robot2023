@@ -14,15 +14,17 @@ public class Auton3 extends SequentialCommandGroup {
         addRequirements(intake);
         addCommands(
             //start up intake to eject game piece
-            new IntakeSpeedCommand(-0.2, intake),
+            new IntakeSpeedCommand(0.5, intake),
             //keep the intake going for 1 second
             new WaitCommand(1),
             //stop the intake
             new IntakeSpeedCommand(0, intake),
-             //drive until tilted on the charging station
-             new DriveDistanceCommand(1.25, drivetrain, gyro),
-             //balance on the charging station
-             new BalanceCommand(gyro, drivetrain)
+            //drive past the charging station
+            new DriveDistanceCommand(-6.5, drivetrain, gyro),
+            //drive until tilted on the charging station
+            new DriveDistanceCommand(1.8, drivetrain, gyro),
+            //balance on the charging station
+            new BalanceCommand(gyro, drivetrain)
         );
     }
 }

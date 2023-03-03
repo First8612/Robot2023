@@ -115,7 +115,7 @@ public class RobotContainer {
 
     m_intake.setDefaultCommand(
       new RunCommand(() -> {
-          m_intake.setSpeed(m_operatorController.getRawAxis(m_intakeAxis));
+          m_intake.setSpeed(-(m_operatorController.getRawAxis(m_intakeAxis)));
       },
       m_intake));
   }
@@ -147,7 +147,7 @@ public class RobotContainer {
       m_intake.toggleIntake();
     }));
 
-    m_balanceButton.onTrue(m_balance);
+    m_balanceButton.whileTrue(m_balance);
   }
 
   /*private void loadTrajectories(SendableChooser<Command> chooser) {

@@ -24,7 +24,6 @@ public class Intake extends SubsystemBase {
 
     public void toggleIntake() {
         m_intakeSolenoid.toggle();
-        new PrintCommand("Intake Toggled").schedule();
     }
 
     public void setSpeed(double speed) {

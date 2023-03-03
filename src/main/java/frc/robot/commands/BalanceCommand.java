@@ -8,7 +8,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 public class BalanceCommand extends PIDCommand {
     private static PIDController controller = new PIDController(
-        0.05, 
+        0.04, 
         0, 
         0
     );
@@ -20,10 +20,9 @@ public class BalanceCommand extends PIDCommand {
             0, 
             value -> {
                 drivetrain.arcadeDrive(
-                    Math.min(-value, 0.3), // drive speed with ceiling
+                    Math.min(-value, 0.32), // drive speed with ceiling
                     0 // drive rotation
                 );
-                System.out.println(gyro.getPitch());
             },
             drivetrain
         );

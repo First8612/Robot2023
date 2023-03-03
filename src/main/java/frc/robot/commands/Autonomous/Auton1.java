@@ -17,15 +17,15 @@ public class Auton1 extends SequentialCommandGroup {
         addRequirements(intake);
         addCommands(
             //start up intake to eject game piece
-            new IntakeSpeedCommand(-0.2, intake),
+            new IntakeSpeedCommand(0.5, intake),
             //keep ghe intake going for 1 second
             new WaitCommand(1),
             //stop the intake
             new IntakeSpeedCommand(0, intake),
             //drive forward until past the charge station
-            new DriveDistanceCommand(4, drivetrain, gyro),
+            new DriveDistanceCommand(-4, drivetrain, gyro),
             //turn -90 degrees
-            new TurnDegreesCommand(0.5, 90, drivetrain, gyro, isRedAlliance),
+            new TurnDegreesCommand(0.5, -90, drivetrain, gyro, isRedAlliance),
             //drive to be parallel to the charging station
             new DriveDistanceCommand(2, drivetrain, gyro),
             //turn 90 degrees
