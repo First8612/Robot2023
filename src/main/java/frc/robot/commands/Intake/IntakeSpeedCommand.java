@@ -15,13 +15,18 @@ public class IntakeSpeedCommand extends CommandBase {
         this.seconds = seconds;
         this.intake = intake;
         this.speed = speed;
+        timer = new Timer();
+    }
+
+    @Override
+    public void initialize() {
+        timer.reset();
+        timer.start();
     }
 
     @Override
     public void execute() {
         intake.setSpeed(speed);
-        timer.reset();
-        timer.start();
     }
 
     @Override

@@ -37,7 +37,8 @@ public class TurnDegreesCommand extends CommandBase {
     // Set motors to stop, read encoder values for starting point
     m_drivetrain.arcadeDrive(0, 0);
     m_drivetrain.reset();
-    turnController.setSetpoint(m_degrees);
+    var allianceAwareDegrees = (m_isRedAlliance.get() ? 1 : -1) * m_degrees;
+    turnController.setSetpoint(allianceAwareDegrees);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -45,7 +46,6 @@ public class TurnDegreesCommand extends CommandBase {
   public void execute() {
     double speed = Math.min(m_speed, turnController.calculate(m_gyro.getYaw()));
     m_drivetrain.arcadeDrive(0, speed);
-    var allianceAwareDegrees = (m_isRedAlliance.get() ? 1 : -1) * m_degrees;
   }
 
   // Called once the command ends or is interrupted.
