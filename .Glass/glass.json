@@ -10,7 +10,8 @@
       "/SmartDashboard/Auton Chooser": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/PIDController[3]": "PIDController",
-      "/SmartDashboard/Reset Position": "Command"
+      "/SmartDashboard/Reset Position": "Command",
+      "/SmartDashboard/TestAuton": "Command"
     },
     "windows": {
       "/SmartDashboard/Auton Chooser": {
@@ -24,6 +25,11 @@
         }
       },
       "/SmartDashboard/Reset Position": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/TestAuton": {
         "window": {
           "visible": true
         }

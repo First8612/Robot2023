@@ -20,7 +20,7 @@ public class BalanceCommand extends PIDCommand {
             0, 
             value -> {
                 drivetrain.arcadeDrive(
-                    Math.min(-value, 0.32), // drive speed with ceiling
+                    Math.min(Math.abs(-value), 0.33) * Math.signum(-value), // drive speed with ceiling
                     0 // drive rotation
                 );
             },

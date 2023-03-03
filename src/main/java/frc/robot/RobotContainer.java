@@ -72,6 +72,7 @@ public class RobotContainer {
   //private final Auton2 m_auton2 = new Auton2(m_robotDrive, m_intake, m_gyro, isRedAllianceSupplier);
   private final Auton3 m_auton3 = new Auton3(m_robotDrive, m_intake, m_gyro);
   private final Auton4 m_auton4 = new Auton4(m_robotDrive, m_intake, m_gyro);
+  private final TestAuton m_testAuton = new TestAuton(m_robotDrive, m_intake, m_gyro);
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -81,6 +82,7 @@ public class RobotContainer {
     m_chooser.setDefaultOption("Balance Auton", m_auton3);
     m_chooser.addOption("Drive Auton", m_auton4);
     //m_chooser.addOption("By Driver Station 3", m_auton2);
+    m_chooser.addOption("Test Auton", m_testAuton);
     SmartDashboard.putData("Auton Chooser", m_chooser);
     SmartDashboard.putData(field);
 
@@ -92,6 +94,8 @@ public class RobotContainer {
 
     SmartDashboard.putData(resetPosition);
     resetPosition.schedule();
+
+    m_testAuton.withName("Test Auton");
   }
 
   public void robotPeriodic() {
