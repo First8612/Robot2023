@@ -27,7 +27,7 @@ public class DriveDistanceCommand extends CommandBase {
         speedController = new PIDController(3, 0, 0);
         rotationController = new PIDController(0, 0, 0);
 
-        addRequirements(drivetrain);
+        //addRequirements(drivetrain);
     }
 
     private double getAverageDistance() {

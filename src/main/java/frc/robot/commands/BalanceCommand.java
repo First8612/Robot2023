@@ -23,8 +23,7 @@ public class BalanceCommand extends PIDCommand {
                     Math.min(Math.abs(-value), 0.33) * Math.signum(-value), // drive speed with ceiling
                     0 // drive rotation
                 );
-            },
-            drivetrain
+            }
         );
         SmartDashboard.putData(controller);
     }
