@@ -18,7 +18,7 @@ public class Auton3 extends SequentialCommandGroup {
             //wait 1 second
             new WaitCommand(1),
             //drive past the charging station
-            new DriveDistanceCommand(-1.65, drivetrain, gyro),
+            new DriveDistanceCommand(-1.75, drivetrain, gyro),
             //balance on the charging station
             new BalanceCommand(gyro, drivetrain)
         );

@@ -115,7 +115,7 @@ public class RobotContainer {
         () -> {
           double speed = m_driverController.getRawAxis(m_axisForwardBack);
           double rotation = m_driverController.getRawAxis(m_axisLeftRight);
-          m_robotDrive.arcadeDrive(-speed * 0.75, rotation * 0.5); 
+          m_robotDrive.arcadeDrive(-speed * 0.9, rotation * 0.8); 
         },
         m_robotDrive));
 
