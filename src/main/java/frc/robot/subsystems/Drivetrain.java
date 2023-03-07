@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 public class Drivetrain extends SubsystemBase {
@@ -42,16 +44,36 @@ public class Drivetrain extends SubsystemBase {
         m_leftFollower.setInverted(true);
         m_leftFollower.follow(m_leftMotor);
         m_rightFollower.follow(m_rightMotor);
+
+        SmartDashboard.putData("Drivebase/Motors/RightLeader", m_rightMotor);
+        SmartDashboard.putData("Drivebase/Motors/RightFollower", m_rightFollower);
+        SmartDashboard.putData("Drivebase/Motors/LeftLeader", m_leftMotor);
+        SmartDashboard.putData("Drivebase/Motors/LeftFollower", m_leftFollower);
+
+
+        for (var motor : m_motors) {
+            motor.configOpenloopRamp(0.5);
+            motor.setNeutralMode(NeutralMode.Brake);
+        }
     }
 
     @Override
     public void periodic() {
         super.periodic();
 
-        SmartDashboard.putNumber("Left Distance Meters", getLeftDistanceMeters());
-        SmartDashboard.putNumber("Right Distance Meters", getRightDistanceMeters());
-        SmartDashboard.putNumber("Left Motor Setpoint", m_leftMotor.get());
-        SmartDashboard.putNumber("Right Motor Setpoint", m_rightMotor.get());
+        collectSensorTelemetry("LeftLeader", m_leftMotor);
+        collectSensorTelemetry("LeftFollower", m_leftFollower);
+        collectSensorTelemetry("RightLeader", m_rightMotor);
+        collectSensorTelemetry("RightFollower", m_rightFollower);
+    }
+
+    private void collectSensorTelemetry(String name, WPI_TalonFX motor)
+    {
+        var sensor = motor.getSensorCollection();
+        SmartDashboard.putNumber("Drivebase/Motors/" + name + "/Sensor/PositionMeters", sensor.getIntegratedSensorPosition() * kSensorToMetersRatio);
+        SmartDashboard.putNumber("Drivebase/Motors/" + name + "/Sensor/Position", sensor.getIntegratedSensorPosition());
+        SmartDashboard.putNumber("Drivebase/Motors/" + name + "/Sensor/Velocity", sensor.getIntegratedSensorVelocity());
+        SmartDashboard.putNumber("Drivebase/Motors/" + name + "/Sensor/PositionAbsolute", sensor.getIntegratedSensorAbsolutePosition());
     }
 
     public void reset() {

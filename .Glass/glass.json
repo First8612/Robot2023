@@ -2,12 +2,19 @@
   "NetworkTables": {
     "transitory": {
       "SmartDashboard": {
+        "PowerDistribution[1]": {
+          "open": true
+        },
         "open": true
       }
     },
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Auton Chooser": "String Chooser",
+      "/SmartDashboard/Drivebase/Motors/LeftFollower": "Motor Controller",
+      "/SmartDashboard/Drivebase/Motors/LeftLeader": "Motor Controller",
+      "/SmartDashboard/Drivebase/Motors/RightFollower": "Motor Controller",
+      "/SmartDashboard/Drivebase/Motors/RightLeader": "Motor Controller",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/PIDController[3]": "PIDController",
       "/SmartDashboard/Reset Position": "Command",

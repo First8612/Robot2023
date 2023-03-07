@@ -20,6 +20,8 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.SerialPort.Port;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PneumaticsControlModule;
 //import com.pathplanner.lib.PathConstraints;
 //import com.pathplanner.lib.PathPlanner;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -42,6 +44,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+  private final PowerDistribution m_powerDistribution = new PowerDistribution();
+  private final PneumaticsControlModule m_pcm = new PneumaticsControlModule();
   //private final double kChassisWidthMeters = Units.inchesToMeters(23);
   private final AHRS m_gyro = new AHRS(Port.kMXP);
   //private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(kChassisWidthMeters);
@@ -96,12 +100,15 @@ public class RobotContainer {
     resetPosition.schedule();
 
     m_testAuton.withName("Test Auton");
+
+    SmartDashboard.putData(m_powerDistribution);
   }
 
   public void robotPeriodic() {
     pose = odometry.update(m_gyro.getRotation2d(), m_robotDrive.getLeftDistanceMeters(), m_robotDrive.getRightDistanceMeters());
     field.setRobotPose(pose);
     SmartDashboard.putNumber("Gyro Y Value", m_gyro.getPitch());
+    SmartDashboard.putBoolean("Pneumatics/Compressor On", m_pcm.getCompressor());
   }
 
   public void teleopInit() {
@@ -115,7 +122,7 @@ public class RobotContainer {
         () -> {
           double speed = m_driverController.getRawAxis(m_axisForwardBack);
           double rotation = m_driverController.getRawAxis(m_axisLeftRight);
-          m_robotDrive.arcadeDrive(-speed * 0.9, rotation * 0.8); 
+          m_robotDrive.arcadeDrive(-speed, rotation); 
         },
         m_robotDrive));
 
