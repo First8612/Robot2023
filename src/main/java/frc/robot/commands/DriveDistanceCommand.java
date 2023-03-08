@@ -25,7 +25,7 @@ public class DriveDistanceCommand extends CommandBase {
         this.gyro = gyro;
 
         speedController = new PIDController(3, 0, 0);
-        rotationController = new PIDController(0, 0, 0);
+        rotationController = new PIDController(0.03, 0, 0.00);
 
         //addRequirements(drivetrain);
     }
@@ -38,8 +38,9 @@ public class DriveDistanceCommand extends CommandBase {
     public void initialize() {
         super.initialize();
 
+        var startingDistance = getAverageDistance();
         startingRotation = gyro.getAngle();
-        speedController.setSetpoint(distanceMeters);
+        speedController.setSetpoint(startingDistance + distanceMeters);
     }
 
     @Override
@@ -50,14 +51,15 @@ public class DriveDistanceCommand extends CommandBase {
         speed = Math.min(Math.abs(speed), 0.5) * Math.signum(speed);
         var rotationError = startingRotation - gyro.getAngle();
         var rotation = rotationController.calculate(rotationError);
+        rotation = Math.min(Math.abs(rotation), 0.3) * Math.signum(rotation);
+        rotation = rotation * -1; // turn the opposite direction
 
         drivetrain.arcadeDrive(speed, rotation);
     }
 
     @Override
     public boolean isFinished() {
-        double distanceToGo = Math.abs(distanceMeters - getAverageDistance());
-        System.out.println(distanceToGo);
+        double distanceToGo = Math.abs(speedController.getSetpoint() - getAverageDistance());
         return distanceToGo < 0.06;
     }
 
@@ -66,5 +68,6 @@ public class DriveDistanceCommand extends CommandBase {
         super.end(interrupted);
 
         drivetrain.setOutputVolts(0, 0);
+        System.out.println("Drive Distance " + distanceMeters + " Finished");
     }
 }
