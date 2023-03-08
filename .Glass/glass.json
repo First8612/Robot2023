@@ -1,9 +1,17 @@
 {
   "NetworkTables": {
     "transitory": {
+      "LiveWindow": {
+        "open": true
+      },
       "SmartDashboard": {
-        "PowerDistribution[1]": {
-          "open": true
+        "Drivebase": {
+          "Motors": {
+            "open": true
+          },
+          "Sensors": {
+            "open": true
+          }
         },
         "open": true
       }
@@ -11,6 +19,7 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Auton Chooser": "String Chooser",
+      "/SmartDashboard/CommandScheduler": "Scheduler",
       "/SmartDashboard/Drivebase/Motors/LeftFollower": "Motor Controller",
       "/SmartDashboard/Drivebase/Motors/LeftLeader": "Motor Controller",
       "/SmartDashboard/Drivebase/Motors/RightFollower": "Motor Controller",

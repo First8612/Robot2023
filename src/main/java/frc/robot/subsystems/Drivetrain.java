@@ -50,7 +50,6 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putData("Drivebase/Motors/LeftLeader", m_leftMotor);
         SmartDashboard.putData("Drivebase/Motors/LeftFollower", m_leftFollower);
 
-
         for (var motor : m_motors) {
             motor.configOpenloopRamp(0.5);
             motor.setNeutralMode(NeutralMode.Brake);
@@ -61,15 +60,19 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         super.periodic();
 
-        collectSensorTelemetry("LeftLeader", m_leftMotor);
-        collectSensorTelemetry("LeftFollower", m_leftFollower);
-        collectSensorTelemetry("RightLeader", m_rightMotor);
-        collectSensorTelemetry("RightFollower", m_rightFollower);
+        collectExtraMotorTelemetry("LeftLeader", m_leftMotor);
+        collectExtraMotorTelemetry("LeftFollower", m_leftFollower);
+        collectExtraMotorTelemetry("RightLeader", m_rightMotor);
+        collectExtraMotorTelemetry("RightFollower", m_rightFollower);
     }
 
-    private void collectSensorTelemetry(String name, WPI_TalonFX motor)
+    private void collectExtraMotorTelemetry(String name, WPI_TalonFX motor)
     {
         var sensor = motor.getSensorCollection();
+
+        SmartDashboard.putNumber("Drivebase/Motors/" + name + "/Temperature", motor.getTemperature());
+        SmartDashboard.putNumber("Drivebase/Motors/" + name + "/OutputPercent", motor.getMotorOutputPercent());
+        SmartDashboard.putNumber("Drivebase/Motors/" + name + "/OutputVoltage", motor.getMotorOutputVoltage());
         SmartDashboard.putNumber("Drivebase/Motors/" + name + "/Sensor/PositionMeters", sensor.getIntegratedSensorPosition() * kSensorToMetersRatio);
         SmartDashboard.putNumber("Drivebase/Motors/" + name + "/Sensor/Position", sensor.getIntegratedSensorPosition());
         SmartDashboard.putNumber("Drivebase/Motors/" + name + "/Sensor/Velocity", sensor.getIntegratedSensorVelocity());
