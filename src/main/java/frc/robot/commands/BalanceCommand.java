@@ -28,4 +28,12 @@ public class BalanceCommand extends PIDCommand {
         SmartDashboard.putData(controller);
     }
 
+    @Override
+    public void initialize() {
+        // TODO Auto-generated method stub
+        super.initialize();
+
+        System.out.println("Balance Starting");
+    }
+
 }

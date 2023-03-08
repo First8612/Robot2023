@@ -5,8 +5,26 @@
         "open": true
       },
       "SmartDashboard": {
+        "DriveDistanceCommand": {
+          "-1.75": {
+            "open": true
+          },
+          "-4.0": {
+            "open": true
+          },
+          "-4.5": {
+            "open": true
+          },
+          "open": true
+        },
         "Drivebase": {
           "Motors": {
+            "RightLeader": {
+              "Sensor": {
+                "open": true
+              },
+              "open": true
+            },
             "open": true
           },
           "Sensors": {
@@ -65,7 +83,7 @@
               "autoFit": true
             }
           ],
-          "height": 278,
+          "height": 2,
           "series": [
             {
               "color": [
@@ -111,7 +129,7 @@
               "autoFit": true
             }
           ],
-          "height": 278
+          "height": 2
         }
       ]
     }

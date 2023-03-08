@@ -22,6 +22,7 @@ public class TestAuton extends SequentialCommandGroup {
             //drive past the charging station
             new DriveDistanceCommand(-4.5, drivetrain, gyro),
             new PrintCommand("1"),
+            new PrintCommand("1.5"),
             //balance on the charging station
             new DriveDistanceCommand(1.75, drivetrain, gyro),
             new PrintCommand("2"),

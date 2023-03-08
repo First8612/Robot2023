@@ -99,8 +99,6 @@ public class RobotContainer {
     SmartDashboard.putData(resetPosition);
     resetPosition.schedule();
 
-    m_testAuton.withName("Test Auton");
-
     SmartDashboard.putData(m_powerDistribution);
   }
 
