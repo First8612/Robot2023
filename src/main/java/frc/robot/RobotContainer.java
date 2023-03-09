@@ -5,32 +5,32 @@
 package frc.robot;
 
 import frc.robot.commands.BalanceCommand;
-//import frc.robot.commands.FollowTrajectoryCommand;
+import frc.robot.commands.FollowTrajectoryCommand;
 import frc.robot.commands.Autonomous.*;
-//import frc.robot.commands.Intake.IntakeSpeedCommand;
+import frc.robot.commands.Intake.IntakeSpeedCommand;
 import frc.robot.subsystems.*;
-//import java.util.function.Consumer;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-//import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
-//import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
-//import com.pathplanner.lib.PathConstraints;
-//import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-//import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -46,9 +46,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   private final PowerDistribution m_powerDistribution = new PowerDistribution();
   private final PneumaticsControlModule m_pcm = new PneumaticsControlModule();
-  //private final double kChassisWidthMeters = Units.inchesToMeters(23);
+  private final double kChassisWidthMeters = Units.inchesToMeters(23);
   private final AHRS m_gyro = new AHRS(Port.kMXP);
-  //private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(kChassisWidthMeters);
+  private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(kChassisWidthMeters);
   private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), 0, 0);
   private Pose2d pose = new Pose2d();
 
@@ -72,21 +72,17 @@ public class RobotContainer {
   private final Turntable m_turntable = new Turntable();
   private final BalanceCommand m_balance = new BalanceCommand(m_gyro, m_robotDrive);
   Supplier<Boolean> isRedAllianceSupplier = () -> NetworkTableInstance.getDefault().getEntry("/FMSInfo/IsRedAlliance").getBoolean(false);
-  //private final Auton1 m_auton1 = new Auton1(m_robotDrive, m_intake, m_gyro, isRedAllianceSupplier);
-  //private final Auton2 m_auton2 = new Auton2(m_robotDrive, m_intake, m_gyro, isRedAllianceSupplier);
-  private final Auton3 m_auton3 = new Auton3(m_robotDrive, m_intake, m_gyro);
-  private final Auton4 m_auton4 = new Auton4(m_robotDrive, m_intake, m_gyro);
+  private final Auton3 m_balanceAuton = new Auton3(m_robotDrive, m_intake, m_gyro);
+  private final Auton4 m_driveAuton = new Auton4(m_robotDrive, m_intake, m_gyro);
   private final TestAuton m_testAuton = new TestAuton(m_robotDrive, m_intake, m_gyro);
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    //loadTrajectories(m_chooser);
-    //m_chooser.setDefaultOption("By Driver Station 1", m_auton1);
-    m_chooser.setDefaultOption("Balance Auton", m_auton3);
-    m_chooser.addOption("Drive Auton", m_auton4);
-    //m_chooser.addOption("By Driver Station 3", m_auton2);
-    m_chooser.addOption("Test Auton", m_testAuton);
+    loadTrajectories(m_chooser);
+    m_chooser.setDefaultOption("Balance Auton", m_balanceAuton);
+    m_chooser.addOption("Drive Auton", m_driveAuton);
+    m_chooser.addOption("Over-Back Auton", m_testAuton);
     SmartDashboard.putData("Auton Chooser", m_chooser);
     SmartDashboard.putData(field);
 
@@ -120,7 +116,7 @@ public class RobotContainer {
         () -> {
           double speed = m_driverController.getRawAxis(m_axisForwardBack);
           double rotation = m_driverController.getRawAxis(m_axisLeftRight);
-          m_robotDrive.arcadeDrive(-speed, rotation); 
+          m_robotDrive.arcadeDrive(-speed, rotation * 0.8); 
         },
         m_robotDrive));
 
@@ -161,17 +157,17 @@ public class RobotContainer {
     m_balanceButton.whileTrue(m_balance);
   }
 
-  /*private void loadTrajectories(SendableChooser<Command> chooser) {
+  private void loadTrajectories(SendableChooser<Command> m_chooser) {
     Consumer<Pose2d> setPose = pose -> odometry.resetPosition(new Rotation2d(), 0, 0, pose);
 
     var path1 = PathPlanner.loadPath("TestPath1", new PathConstraints(.5, .3));
     var trajectory1Command = new FollowTrajectoryCommand(() -> pose, setPose, kinematics, m_robotDrive, path1);
-    chooser.setDefaultOption("Path 1", trajectory1Command);
+    m_chooser.addOption("Test Path 1", trajectory1Command);
 
     var path2 = PathPlanner.loadPath("TestPath2", new PathConstraints(.5, .3));
     var trajectory2Command = new FollowTrajectoryCommand(() -> pose, setPose, kinematics, m_robotDrive, path2);
-    chooser.addOption("Path 2", trajectory2Command);
-  } */
+    m_chooser.addOption("Test Path 2", trajectory2Command);
+  } 
 
 
   /**

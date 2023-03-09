@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-//import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -87,10 +86,6 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void arcadeDrive(double speed, double rotation) {
-        //var slewSpeed = filterForwardBack.calculate(speed);
-        //var slewRotate = filterRotation.calculate(-rotation);
-        // var feedSpeed = m_feedForward.calculate(slewSpeed);
-        // var feedRotate = m_feedForward.calculate(slewRotate);
         m_robotDrive.arcadeDrive(speed, -rotation);
     }
 
