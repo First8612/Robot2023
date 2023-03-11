@@ -93,6 +93,10 @@ public class Drivetrain extends SubsystemBase {
         m_robotDrive.tankDrive(leftSpeed, rightSpeed);
     }
 
+    public void tankDrive(double leftSpeed, double rightSpeed, boolean squareInputs) {
+        m_robotDrive.tankDrive(leftSpeed, rightSpeed, squareInputs);
+    }
+
     public void setMaxSpeed(double maxOutput) {
         m_robotDrive.setMaxOutput(maxOutput);
     }
