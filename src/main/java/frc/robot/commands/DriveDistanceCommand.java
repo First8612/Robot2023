@@ -47,7 +47,7 @@ public class DriveDistanceCommand extends CommandBase {
     public void execute() {
         super.execute();
 
-        var speed = speedController.calculate(getAverageDistance());
+        var speed = speedController.calculate(getAverageDistance()) + 0.1;
         speed = Math.min(Math.abs(speed), 0.5) * Math.signum(speed);
         var rotationError = startingRotation - gyro.getAngle();
         var rotation = rotationController.calculate(rotationError);
@@ -55,11 +55,13 @@ public class DriveDistanceCommand extends CommandBase {
         rotation = rotation * -1; // turn the opposite direction
 
         drivetrain.arcadeDrive(speed, rotation);
+
     }
 
     @Override
     public boolean isFinished() {
         double distanceToGo = Math.abs(speedController.getSetpoint() - getAverageDistance());
+        System.out.println(distanceToGo);
         return distanceToGo < 0.06;
     }
 

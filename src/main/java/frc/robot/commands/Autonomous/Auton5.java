@@ -11,8 +11,8 @@ import frc.robot.commands.Intake.IntakeSpeedCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 
-public class TestAuton extends SequentialCommandGroup {
-    public TestAuton(Drivetrain drivetrain, Intake intake, AHRS gyro) {
+public class Auton5 extends SequentialCommandGroup {
+    public Auton5(Drivetrain drivetrain, Intake intake, AHRS gyro) {
         addRequirements(drivetrain, intake);
         addCommands(
             //start up intake to eject game piece
