@@ -7,6 +7,9 @@ package frc.robot;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.FollowTrajectoryCommand;
 import frc.robot.commands.Autonomous.*;
+import frc.robot.driverProfiles.CarterProfile;
+import frc.robot.driverProfiles.DriverProfileBase;
+import frc.robot.driverProfiles.NateProfile;
 import frc.robot.subsystems.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -50,12 +53,9 @@ public class RobotContainer {
   private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), 0, 0);
   private Pose2d pose = new Pose2d();
 
-  private final int m_axisForwardBack = XboxController.Axis.kLeftY.value;
-  private final int m_axisLeftRight = XboxController.Axis.kRightX.value;
   private final int m_intakeAxis = XboxController.Axis.kLeftY.value;
   private final XboxController m_driverController = new XboxController(0);
   private final XboxController m_operatorController = new XboxController(1);
-
   private final JoystickButton m_intakeToggle = new JoystickButton(m_operatorController, XboxController.Button.kLeftBumper.value);
   private final POVButton m_turntableForwardButton = new POVButton(m_operatorController, 90);
   private final POVButton m_turntableBackwardButton = new POVButton(m_operatorController, 270);
@@ -69,20 +69,31 @@ public class RobotContainer {
   private final Intake m_intake = new Intake();
   private final Turntable m_turntable = new Turntable();
   private final BalanceCommand m_balance = new BalanceCommand(m_gyro, m_robotDrive);
+
   Supplier<Boolean> isRedAllianceSupplier = () -> NetworkTableInstance.getDefault().getEntry("/FMSInfo/IsRedAlliance").getBoolean(false);
   private final Auton3 m_balanceAuton = new Auton3(m_robotDrive, m_intake, m_gyro);
   private final Auton4 m_driveAuton = new Auton4(m_robotDrive, m_intake, m_gyro);
   private final Auton5 m_testAuton = new Auton5(m_robotDrive, m_intake, m_gyro);
-  SendableChooser<Command> m_chooser = new SendableChooser<>();
+  SendableChooser<Command> m_autonChooser = new SendableChooser<>();
+
+    private final SendableChooser<DriverProfileBase> m_driverChooser = new SendableChooser<>();
+    private final DriverProfileBase m_carterProfile = new CarterProfile(m_robotDrive);
+    private final DriverProfileBase m_nateProfile = new NateProfile(m_robotDrive);
+    private DriverProfileBase m_selectedProfile;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    loadTrajectories(m_chooser);
-    m_chooser.setDefaultOption("Balance Auton", m_balanceAuton);
-    m_chooser.addOption("Drive Auton", m_driveAuton);
-    m_chooser.addOption("Over-Back Auton", m_testAuton);
-    SmartDashboard.putData("Auton Chooser", m_chooser);
+    loadTrajectories(m_autonChooser);
+    m_autonChooser.setDefaultOption("Balance Auton", m_balanceAuton);
+    m_autonChooser.addOption("Drive Auton", m_driveAuton);
+    m_autonChooser.addOption("Over-Back Auton", m_testAuton);
+    SmartDashboard.putData("Auton Chooser", m_autonChooser);
     SmartDashboard.putData(field);
+
+    m_driverChooser.setDefaultOption("For Carter", m_carterProfile);
+    m_driverChooser.addOption("For Nate", m_nateProfile);
+
+    SmartDashboard.putData("Driver Chooser", m_driverChooser);
 
     this.resetPosition = new InstantCommand(() -> {
       m_gyro.reset();
@@ -109,20 +120,19 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
-    m_robotDrive.setDefaultCommand(
-      new RunCommand(
-        () -> {
-          double speed = m_driverController.getRawAxis(m_axisForwardBack);
-          double rotation = m_driverController.getRawAxis(m_axisLeftRight);
-          m_robotDrive.arcadeDrive(-speed, rotation * 0.8); 
-        },
-        m_robotDrive));
-
     m_intake.setDefaultCommand(
       new RunCommand(() -> {
           m_intake.setSpeed(-(m_operatorController.getRawAxis(m_intakeAxis)));
       },
       m_intake));
+
+      if (m_selectedProfile != null) {
+        m_selectedProfile.disable();
+      }
+      m_selectedProfile = m_driverChooser.getSelected();
+      m_selectedProfile.enable();
+      var teleopCommand =  m_selectedProfile.getTeleopCommand();
+      m_robotDrive.setDefaultCommand(teleopCommand);
   }
 
   public void autonomousInit() {
@@ -176,6 +186,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // A command will be run in autonomous
     m_robotDrive.reset();
-    return m_chooser.getSelected();
+    return m_autonChooser.getSelected();
   }
 }
