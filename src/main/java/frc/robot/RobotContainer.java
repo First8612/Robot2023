@@ -9,7 +9,8 @@ import frc.robot.commands.FollowTrajectoryCommand;
 import frc.robot.commands.Autonomous.*;
 import frc.robot.driverProfiles.CarterProfile;
 import frc.robot.driverProfiles.DriverProfileBase;
-import frc.robot.driverProfiles.NateProfile;
+import frc.robot.driverProfiles.NateAndDrewProfile;
+import frc.robot.driverProfiles.TankDriveProfile;
 import frc.robot.subsystems.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -78,7 +79,8 @@ public class RobotContainer {
 
     private final SendableChooser<DriverProfileBase> m_driverChooser = new SendableChooser<>();
     private final DriverProfileBase m_carterProfile = new CarterProfile(m_robotDrive);
-    private final DriverProfileBase m_nateProfile = new NateProfile(m_robotDrive);
+    private final DriverProfileBase m_nateProfile = new NateAndDrewProfile(m_robotDrive);
+    private final DriverProfileBase m_tankProfile = new TankDriveProfile(m_robotDrive);
     private DriverProfileBase m_selectedProfile;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -90,8 +92,9 @@ public class RobotContainer {
     SmartDashboard.putData("Auton Chooser", m_autonChooser);
     SmartDashboard.putData(field);
 
-    m_driverChooser.setDefaultOption("For Carter", m_carterProfile);
-    m_driverChooser.addOption("For Nate", m_nateProfile);
+    m_driverChooser.setDefaultOption("Carter", m_carterProfile);
+    m_driverChooser.addOption("Nate/Drew", m_nateProfile);
+    m_driverChooser.addOption("Tank Drive", m_tankProfile);
 
     SmartDashboard.putData("Driver Chooser", m_driverChooser);
 
