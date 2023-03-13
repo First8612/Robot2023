@@ -1,7 +1,6 @@
 package frc.robot.commands.Autonomous;
 
 import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.DriveDistanceCommand;
@@ -18,7 +17,7 @@ public class Auton4 extends SequentialCommandGroup{
             new IntakeSpeedCommand(0.5, 1, intake),
             //wait 1 second
             new WaitCommand(1),
-            //drive past the charging station
+            //drive out past the charging station
             new DriveDistanceCommand(-4, drivetrain, gyro)
         );
     }  

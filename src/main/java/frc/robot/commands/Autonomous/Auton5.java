@@ -1,8 +1,6 @@
 package frc.robot.commands.Autonomous;
 
 import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.BalanceCommand;
@@ -21,11 +19,9 @@ public class Auton5 extends SequentialCommandGroup {
             new WaitCommand(1),
             //drive past the charging station
             new DriveDistanceCommand(-4.5, drivetrain, gyro),
-            new PrintCommand("1"),
-            new PrintCommand("1.5"),
-            //balance on the charging station
+            //drive back to the charging station
             new DriveDistanceCommand(1.75, drivetrain, gyro),
-            new PrintCommand("2"),
+            //balance on the charging station
             new BalanceCommand(gyro, drivetrain)
         );
     }

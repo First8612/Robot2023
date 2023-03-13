@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;

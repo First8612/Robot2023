@@ -30,7 +30,6 @@ public class BalanceCommand extends PIDCommand {
 
     @Override
     public void initialize() {
-        // TODO Auto-generated method stub
         super.initialize();
 
         System.out.println("Balance Starting");
