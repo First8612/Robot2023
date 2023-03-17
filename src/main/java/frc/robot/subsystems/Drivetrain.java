@@ -49,7 +49,7 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putData("Drivebase/Motors/LeftFollower", m_leftFollower);
 
         for (var motor : m_motors) {
-            motor.configOpenloopRamp(0.25);
+            motor.configOpenloopRamp(0.5);
             motor.setNeutralMode(NeutralMode.Brake);
         }
     }

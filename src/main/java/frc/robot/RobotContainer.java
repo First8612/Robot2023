@@ -57,9 +57,11 @@ public class RobotContainer {
   private final int m_intakeAxis = XboxController.Axis.kLeftY.value;
   private final XboxController m_driverController = new XboxController(0);
   private final XboxController m_operatorController = new XboxController(1);
+
   private final JoystickButton m_intakeToggle = new JoystickButton(m_operatorController, XboxController.Button.kLeftBumper.value);
-  private final POVButton m_turntableForwardButton = new POVButton(m_operatorController, 90);
-  private final POVButton m_turntableBackwardButton = new POVButton(m_operatorController, 270);
+  private final POVButton m_conveyorForward = new POVButton(m_operatorController, 90);
+  private final POVButton m_conveyorBackward = new POVButton(m_operatorController, 270);
+  private final JoystickButton m_shooterEject = new JoystickButton(m_operatorController, XboxController.Button.kRightBumper.value);
   private final JoystickButton m_balanceButton = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
 
   private Field2d field = new Field2d();
@@ -68,7 +70,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...  
   private final Drivetrain m_robotDrive = new Drivetrain();
   private final Intake m_intake = new Intake();
-  private final Turntable m_turntable = new Turntable();
+  private final Conveyor m_conveyor = new Conveyor();
+  private final Shooter m_shooter = new Shooter();
   private final BalanceCommand m_balance = new BalanceCommand(m_gyro, m_robotDrive);
 
   Supplier<Boolean> isRedAllianceSupplier = () -> NetworkTableInstance.getDefault().getEntry("/FMSInfo/IsRedAlliance").getBoolean(false);
@@ -77,11 +80,11 @@ public class RobotContainer {
   private final Auton5 m_testAuton = new Auton5(m_robotDrive, m_intake, m_gyro);
   SendableChooser<Command> m_autonChooser = new SendableChooser<>();
 
-    private final SendableChooser<DriverProfileBase> m_driverChooser = new SendableChooser<>();
-    private final DriverProfileBase m_carterProfile = new CarterProfile(m_robotDrive);
-    private final DriverProfileBase m_nateProfile = new NateAndDrewProfile(m_robotDrive);
-    private final DriverProfileBase m_tankProfile = new TankDriveProfile(m_robotDrive);
-    private DriverProfileBase m_selectedProfile;
+  private final SendableChooser<DriverProfileBase> m_driverChooser = new SendableChooser<>();
+  private final DriverProfileBase m_carterProfile = new CarterProfile(m_robotDrive);
+  private final DriverProfileBase m_nateProfile = new NateAndDrewProfile(m_robotDrive);
+  private final DriverProfileBase m_tankProfile = new TankDriveProfile(m_robotDrive);
+  private DriverProfileBase m_selectedProfile;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -153,12 +156,16 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    m_turntableForwardButton.whileTrue(new RunCommand(() -> {
-      m_turntable.enableForwardTable();
+    m_conveyorForward.whileTrue(new RunCommand(() -> {
+      m_conveyor.setSpeed(0.5);
     }));
   
-    m_turntableBackwardButton.whileTrue(new RunCommand(() -> {
-      m_turntable.enableBackwardTable();
+    m_conveyorBackward.whileTrue(new RunCommand(() -> {
+      m_conveyor.setSpeed(-0.5);
+    }));
+
+    m_shooterEject.toggleOnTrue(new RunCommand(() -> {
+      m_shooter.shooterEject(0.8);
     }));
 
     m_intakeToggle.onTrue(new InstantCommand(() -> {
