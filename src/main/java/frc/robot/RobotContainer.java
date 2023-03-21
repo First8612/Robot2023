@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -123,15 +124,13 @@ public class RobotContainer {
   public void teleopInit() {
     resetPosition.schedule();
 
-    // Configure the trigger bindings
-    configureBindings();
-
+    
     m_intake.setDefaultCommand(
       new RunCommand(() -> {
-          m_intake.setSpeed(-(m_operatorController.getRawAxis(m_intakeAxis)));
+        m_intake.setSpeed(-(m_operatorController.getRawAxis(m_intakeAxis)));
       },
       m_intake));
-
+      
       if (m_selectedProfile != null) {
         m_selectedProfile.disable();
       }
@@ -139,7 +138,10 @@ public class RobotContainer {
       m_selectedProfile.enable();
       var teleopCommand =  m_selectedProfile.getTeleopCommand();
       m_robotDrive.setDefaultCommand(teleopCommand);
-  }
+
+      // Configure the trigger bindings
+      configureBindings();
+    }
 
   public void autonomousInit() {
     m_gyro.reset();
@@ -164,9 +166,12 @@ public class RobotContainer {
       m_conveyor.setSpeed(-0.5);
     }));
 
-    m_shooterEject.toggleOnTrue(new RunCommand(() -> {
-      m_shooter.shooterEject(0.8);
-    }));
+    m_shooterEject.toggleOnTrue(new StartEndCommand(
+      () -> {
+        m_shooter.shooterEject(-0.8);
+      }, 
+      () -> {m_shooter.shooterStop();}
+    ));
 
     m_intakeToggle.onTrue(new InstantCommand(() -> {
       m_intake.toggleIntake();

@@ -35,7 +35,7 @@ public class CarterProfile extends DriverProfileBase {
     @Override
     public Command getTeleopCommand() {
         return new RunCommand(() -> {
-            drivetrain.arcadeDrive(-controller.getRawAxis(Axis.kLeftY.value), controller.getRawAxis(Axis.kRightX.value));
+            drivetrain.arcadeDrive(controller.getRawAxis(Axis.kLeftY.value), controller.getRawAxis(Axis.kRightX.value));
         }, drivetrain);
     }
 
