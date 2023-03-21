@@ -78,7 +78,7 @@ public class RobotContainer {
   Supplier<Boolean> isRedAllianceSupplier = () -> NetworkTableInstance.getDefault().getEntry("/FMSInfo/IsRedAlliance").getBoolean(false);
   private final Auton3 m_balanceAuton = new Auton3(m_robotDrive, m_intake, m_gyro);
   private final Auton4 m_driveAuton = new Auton4(m_robotDrive, m_intake, m_gyro);
-  private final Auton5 m_testAuton = new Auton5(m_robotDrive, m_intake, m_gyro);
+  private final Auton5 m_testAuton = new Auton5(m_robotDrive, m_intake, m_gyro, m_shooter);
   SendableChooser<Command> m_autonChooser = new SendableChooser<>();
 
   private final SendableChooser<DriverProfileBase> m_driverChooser = new SendableChooser<>();
