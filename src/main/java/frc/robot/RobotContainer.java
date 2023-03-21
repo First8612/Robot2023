@@ -160,18 +160,21 @@ public class RobotContainer {
 
     m_conveyorForward.whileTrue(new RunCommand(() -> {
       m_conveyor.setSpeed(0.5);
+      System.out.println("Fwd");
     }));
   
     m_conveyorBackward.whileTrue(new RunCommand(() -> {
       m_conveyor.setSpeed(-0.5);
+      System.out.println("Back");
     }));
 
     m_shooterEject.toggleOnTrue(new StartEndCommand(
       () -> {
         m_shooter.shooterEject(-0.8);
       }, 
-      () -> {m_shooter.shooterStop();}
-    ));
+      () -> {
+        m_shooter.shooterStop();
+      }));
 
     m_intakeToggle.onTrue(new InstantCommand(() -> {
       m_intake.toggleIntake();
