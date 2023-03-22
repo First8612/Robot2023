@@ -48,7 +48,7 @@ public class DriveDistanceCommand extends CommandBase {
         super.execute();
 
         var speed = speedController.calculate(getAverageDistance()) + 0.1;
-        speed = Math.min(Math.abs(speed), 0.5) * Math.signum(speed);
+        speed = Math.min(Math.abs(speed), 0.6) * Math.signum(speed);
         var rotationError = startingRotation - gyro.getAngle();
         var rotation = rotationController.calculate(rotationError);
         rotation = Math.min(Math.abs(rotation), 0.3) * Math.signum(rotation);

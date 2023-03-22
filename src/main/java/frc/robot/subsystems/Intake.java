@@ -16,7 +16,7 @@ public class Intake extends SubsystemBase {
     public Intake() {
         super();
 
-        m_intakeSolenoid.set(Value.kForward);
+        m_intakeSolenoid.set(Value.kReverse);
         m_intakeMotor.setIdleMode(IdleMode.kBrake);
     }
 

@@ -60,8 +60,8 @@ public class RobotContainer {
   private final XboxController m_operatorController = new XboxController(1);
 
   private final JoystickButton m_intakeToggle = new JoystickButton(m_operatorController, XboxController.Button.kLeftBumper.value);
-  private final POVButton m_conveyorForward = new POVButton(m_operatorController, 90);
-  private final POVButton m_conveyorBackward = new POVButton(m_operatorController, 270);
+  private final POVButton m_conveyorForward = new POVButton(m_operatorController, 0);
+  private final POVButton m_conveyorBackward = new POVButton(m_operatorController, 180);
   private final JoystickButton m_shooterEject = new JoystickButton(m_operatorController, XboxController.Button.kRightBumper.value);
   private final JoystickButton m_balanceButton = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
 
@@ -76,8 +76,8 @@ public class RobotContainer {
   private final BalanceCommand m_balance = new BalanceCommand(m_gyro, m_robotDrive);
 
   Supplier<Boolean> isRedAllianceSupplier = () -> NetworkTableInstance.getDefault().getEntry("/FMSInfo/IsRedAlliance").getBoolean(false);
-  private final Auton3 m_balanceAuton = new Auton3(m_robotDrive, m_intake, m_gyro);
-  private final Auton4 m_driveAuton = new Auton4(m_robotDrive, m_intake, m_gyro);
+  private final Auton3 m_balanceAuton = new Auton3(m_robotDrive, m_intake, m_gyro, m_shooter);
+  private final Auton4 m_driveAuton = new Auton4(m_robotDrive, m_intake, m_gyro, m_shooter);
   private final Auton5 m_testAuton = new Auton5(m_robotDrive, m_intake, m_gyro, m_shooter);
   SendableChooser<Command> m_autonChooser = new SendableChooser<>();
 
@@ -158,19 +158,25 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    m_conveyorForward.whileTrue(new RunCommand(() -> {
-      m_conveyor.setSpeed(0.5);
-      System.out.println("Fwd");
+    m_conveyorForward.whileTrue(new StartEndCommand(
+    () -> {
+      m_conveyor.setSpeed(0.3);
+    },
+    () -> {
+      m_conveyor.setSpeed(0);
     }));
   
-    m_conveyorBackward.whileTrue(new RunCommand(() -> {
-      m_conveyor.setSpeed(-0.5);
-      System.out.println("Back");
+    m_conveyorBackward.whileTrue(new StartEndCommand(
+    () -> {
+      m_conveyor.setSpeed(-0.3);
+    },
+    () -> {
+      m_conveyor.setSpeed(0);
     }));
 
     m_shooterEject.toggleOnTrue(new StartEndCommand(
       () -> {
-        m_shooter.shooterEject(-0.8);
+        m_shooter.shooterEject(0.8);
       }, 
       () -> {
         m_shooter.shooterStop();
