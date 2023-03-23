@@ -14,12 +14,12 @@ public class Auton5 extends SequentialCommandGroup {
     public Auton5(Drivetrain drivetrain, Intake intake, AHRS gyro, Shooter shooter) {
         addRequirements(drivetrain, intake, shooter);
         addCommands(
-            new RunCommand(() -> { shooter.shooterEject(-0.8); }).withTimeout(1),
+            new RunCommand(() -> { shooter.shooterEject(0.8); }).withTimeout(1),
             new InstantCommand(() -> { shooter.shooterStop(); }),
             //drive past the charging station
-            new DriveDistanceCommand(4.5, drivetrain, gyro),
+            new DriveDistanceCommand(-4.5, drivetrain, gyro),
             //drive back to the charging station
-            new DriveDistanceCommand(-1.75, drivetrain, gyro),
+            new DriveDistanceCommand(1.75, drivetrain, gyro),
             //balance on the charging station
             new BalanceCommand(gyro, drivetrain)
         );

@@ -15,10 +15,10 @@ public class Auton4 extends SequentialCommandGroup{
         addRequirements(intake);
         addRequirements(shooter);
         addCommands(
-            new RunCommand(() -> { shooter.shooterEject(-0.8); }).withTimeout(1),
+            new RunCommand(() -> { shooter.shooterEject(0.8); }).withTimeout(1),
             new InstantCommand(() -> { shooter.shooterStop(); }),
             //drive out past the charging station
-            new DriveDistanceCommand(4, drivetrain, gyro)
+            new DriveDistanceCommand(-4, drivetrain, gyro)
         );
     }  
 }
