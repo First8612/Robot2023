@@ -18,7 +18,7 @@ public class Auton3 extends SequentialCommandGroup {
             new RunCommand(() -> { shooter.shooterEject(-0.8); }).withTimeout(1),
             new InstantCommand(() -> { shooter.shooterStop(); }),
             //drive onto the charging station
-            new DriveDistanceCommand(-1.75, drivetrain, gyro),
+            new DriveDistanceCommand(1.75, drivetrain, gyro),
             //balance on the charging station
             new BalanceCommand(gyro, drivetrain)
         );

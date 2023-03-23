@@ -22,8 +22,8 @@ public class NateAndDrewProfile extends DriverProfileBase {
     @Override
     public Command getTeleopCommand() {
         return new RunCommand(() -> {
-            var forward = -controller.getRawAxis(2);
-            var reverse = controller.getRawAxis(3);
+            var forward = -controller.getRawAxis(3);
+            var reverse = controller.getRawAxis(2);
             var speed = forward + reverse;
             drivetrain.arcadeDrive(
                 speed, 
