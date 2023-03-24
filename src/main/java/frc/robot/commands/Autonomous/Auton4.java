@@ -1,8 +1,6 @@
 package frc.robot.commands.Autonomous;
 
 import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -23,7 +21,6 @@ public class Auton4 extends SequentialCommandGroup{
         addCommands(
             // yeet
             new RunCommand(() -> { shooter.shooterEject(0.8); }).withTimeout(1),
-
             // stop shooter
             new InstantCommand(() -> { shooter.shooterStop(); }),
             
@@ -45,12 +42,10 @@ public class Auton4 extends SequentialCommandGroup{
             // retract and stop the intake
             new InstantCommand(() -> {
                 intake.toggleIntake();
-                intake.setSpeed(0); // stop the intake
+                intake.setSpeed(0);
             }),
-
             // drive back a little less then we drove out
             new DriveDistanceCommand(4.5, drivetrain, gyro), 
-
             // yeet
             new RunCommand(() -> { 
                 shooter.shooterEject(0.8); 

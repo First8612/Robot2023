@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.DriveDistanceCommand;
+import frc.robot.commands.DriveDistanceFast;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -19,7 +20,7 @@ public class Auton5 extends SequentialCommandGroup {
             //drive past the charging station
             new DriveDistanceCommand(-4.5, drivetrain, gyro),
             //drive back to the charging station
-            new DriveDistanceCommand(1.75, drivetrain, gyro),
+            new DriveDistanceFast(1.75, drivetrain, gyro),
             //balance on the charging station
             new BalanceCommand(gyro, drivetrain)
         );
