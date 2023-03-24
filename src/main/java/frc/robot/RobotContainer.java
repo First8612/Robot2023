@@ -90,9 +90,9 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     loadTrajectories(m_autonChooser);
-    m_autonChooser.setDefaultOption("Balance Auton", m_balanceAuton);
+    m_autonChooser.addOption("Balance Auton", m_balanceAuton);
     m_autonChooser.addOption("Drive Auton", m_driveAuton);
-    m_autonChooser.addOption("Over-Back Auton", m_testAuton);
+    m_autonChooser.setDefaultOption("Over-Back Auton", m_testAuton);
     SmartDashboard.putData("Auton Chooser", m_autonChooser);
     SmartDashboard.putData(field);
 
