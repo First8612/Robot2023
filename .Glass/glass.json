@@ -29,7 +29,8 @@
           },
           "Sensors": {
             "open": true
-          }
+          },
+          "open": true
         },
         "open": true
       }
@@ -42,6 +43,7 @@
       "/SmartDashboard/Drivebase/Motors/LeftLeader": "Motor Controller",
       "/SmartDashboard/Drivebase/Motors/RightFollower": "Motor Controller",
       "/SmartDashboard/Drivebase/Motors/RightLeader": "Motor Controller",
+      "/SmartDashboard/Driver Chooser": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/PIDController[3]": "PIDController",
       "/SmartDashboard/Reset Position": "Command",
@@ -83,7 +85,7 @@
               "autoFit": true
             }
           ],
-          "height": 2,
+          "height": 278,
           "series": [
             {
               "color": [
@@ -129,7 +131,7 @@
               "autoFit": true
             }
           ],
-          "height": 2
+          "height": 278
         }
       ]
     }

@@ -11,12 +11,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake extends SubsystemBase {
     private CANSparkMax m_intakeMotor = new CANSparkMax(5, MotorType.kBrushless);
-    private DoubleSolenoid m_intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 2);
+    private DoubleSolenoid m_intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 6, 7);
 
     public Intake() {
         super();
 
-        m_intakeSolenoid.set(Value.kForward);
+        m_intakeSolenoid.set(Value.kReverse);
         m_intakeMotor.setIdleMode(IdleMode.kBrake);
     }
 

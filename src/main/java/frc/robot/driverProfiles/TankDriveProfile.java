@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.subsystems.Drivetrain;
 
-public class NateProfile extends DriverProfileBase {
+public class TankDriveProfile extends DriverProfileBase {
     private final Drivetrain drivetrain;
     private XboxController controller;
     private POVButton spinLeft;
     private JoystickButton spinRight;
 
-    public NateProfile(Drivetrain drivetrain) {
+    public TankDriveProfile(Drivetrain drivetrain) {
         super();
         this.drivetrain = drivetrain;
     }
@@ -36,7 +36,7 @@ public class NateProfile extends DriverProfileBase {
     @Override
     public Command getTeleopCommand() {
         return new RunCommand(() -> {
-            drivetrain.tankDrive(-controller.getRawAxis(XboxController.Axis.kLeftY.value), -controller.getRawAxis(XboxController.Axis.kRightY.value));
+            drivetrain.tankDrive(-controller.getRawAxis(XboxController.Axis.kLeftY.value), -controller.getRawAxis(5));
         }, drivetrain);
     }
 

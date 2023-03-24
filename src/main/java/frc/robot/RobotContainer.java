@@ -9,7 +9,8 @@ import frc.robot.commands.FollowTrajectoryCommand;
 import frc.robot.commands.Autonomous.*;
 import frc.robot.driverProfiles.CarterProfile;
 import frc.robot.driverProfiles.DriverProfileBase;
-import frc.robot.driverProfiles.NateProfile;
+import frc.robot.driverProfiles.NateAndDrewProfile;
+import frc.robot.driverProfiles.TankDriveProfile;
 import frc.robot.subsystems.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -33,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -56,9 +58,11 @@ public class RobotContainer {
   private final int m_intakeAxis = XboxController.Axis.kLeftY.value;
   private final XboxController m_driverController = new XboxController(0);
   private final XboxController m_operatorController = new XboxController(1);
+
   private final JoystickButton m_intakeToggle = new JoystickButton(m_operatorController, XboxController.Button.kLeftBumper.value);
-  private final POVButton m_turntableForwardButton = new POVButton(m_operatorController, 90);
-  private final POVButton m_turntableBackwardButton = new POVButton(m_operatorController, 270);
+  private final POVButton m_conveyorForward = new POVButton(m_operatorController, 0);
+  private final POVButton m_conveyorBackward = new POVButton(m_operatorController, 180);
+  private final JoystickButton m_shooterEject = new JoystickButton(m_operatorController, XboxController.Button.kRightBumper.value);
   private final JoystickButton m_balanceButton = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
 
   private Field2d field = new Field2d();
@@ -67,19 +71,21 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...  
   private final Drivetrain m_robotDrive = new Drivetrain();
   private final Intake m_intake = new Intake();
-  private final Turntable m_turntable = new Turntable();
+  private final Conveyor m_conveyor = new Conveyor();
+  private final Shooter m_shooter = new Shooter();
   private final BalanceCommand m_balance = new BalanceCommand(m_gyro, m_robotDrive);
 
   Supplier<Boolean> isRedAllianceSupplier = () -> NetworkTableInstance.getDefault().getEntry("/FMSInfo/IsRedAlliance").getBoolean(false);
-  private final Auton3 m_balanceAuton = new Auton3(m_robotDrive, m_intake, m_gyro);
-  private final Auton4 m_driveAuton = new Auton4(m_robotDrive, m_intake, m_gyro);
-  private final Auton5 m_testAuton = new Auton5(m_robotDrive, m_intake, m_gyro);
+  private final Auton3 m_balanceAuton = new Auton3(m_robotDrive, m_intake, m_gyro, m_shooter);
+  private final Auton4 m_driveAuton = new Auton4(m_robotDrive, m_intake, m_gyro, m_shooter);
+  private final Auton5 m_testAuton = new Auton5(m_robotDrive, m_intake, m_gyro, m_shooter);
   SendableChooser<Command> m_autonChooser = new SendableChooser<>();
 
-    private final SendableChooser<DriverProfileBase> m_driverChooser = new SendableChooser<>();
-    private final DriverProfileBase m_carterProfile = new CarterProfile(m_robotDrive);
-    private final DriverProfileBase m_nateProfile = new NateProfile(m_robotDrive);
-    private DriverProfileBase m_selectedProfile;
+  private final SendableChooser<DriverProfileBase> m_driverChooser = new SendableChooser<>();
+  private final DriverProfileBase m_carterProfile = new CarterProfile(m_robotDrive);
+  private final DriverProfileBase m_nateProfile = new NateAndDrewProfile(m_robotDrive);
+  private final DriverProfileBase m_tankProfile = new TankDriveProfile(m_robotDrive);
+  private DriverProfileBase m_selectedProfile;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -90,8 +96,9 @@ public class RobotContainer {
     SmartDashboard.putData("Auton Chooser", m_autonChooser);
     SmartDashboard.putData(field);
 
-    m_driverChooser.setDefaultOption("For Carter", m_carterProfile);
-    m_driverChooser.addOption("For Nate", m_nateProfile);
+    m_driverChooser.setDefaultOption("Carter", m_carterProfile);
+    m_driverChooser.addOption("Nate/Drew", m_nateProfile);
+    m_driverChooser.addOption("Tank Drive", m_tankProfile);
 
     SmartDashboard.putData("Driver Chooser", m_driverChooser);
 
@@ -117,15 +124,13 @@ public class RobotContainer {
   public void teleopInit() {
     resetPosition.schedule();
 
-    // Configure the trigger bindings
-    configureBindings();
-
+    
     m_intake.setDefaultCommand(
       new RunCommand(() -> {
-          m_intake.setSpeed(-(m_operatorController.getRawAxis(m_intakeAxis)));
+        m_intake.setSpeed(-(m_operatorController.getRawAxis(m_intakeAxis)));
       },
       m_intake));
-
+      
       if (m_selectedProfile != null) {
         m_selectedProfile.disable();
       }
@@ -133,7 +138,10 @@ public class RobotContainer {
       m_selectedProfile.enable();
       var teleopCommand =  m_selectedProfile.getTeleopCommand();
       m_robotDrive.setDefaultCommand(teleopCommand);
-  }
+
+      // Configure the trigger bindings
+      configureBindings();
+    }
 
   public void autonomousInit() {
     m_gyro.reset();
@@ -150,13 +158,29 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    m_turntableForwardButton.whileTrue(new RunCommand(() -> {
-      m_turntable.enableForwardTable();
+    m_conveyorForward.whileTrue(new StartEndCommand(
+    () -> {
+      m_conveyor.setSpeed(0.3);
+    },
+    () -> {
+      m_conveyor.setSpeed(0);
     }));
   
-    m_turntableBackwardButton.whileTrue(new RunCommand(() -> {
-      m_turntable.enableBackwardTable();
+    m_conveyorBackward.whileTrue(new StartEndCommand(
+    () -> {
+      m_conveyor.setSpeed(-0.3);
+    },
+    () -> {
+      m_conveyor.setSpeed(0);
     }));
+
+    m_shooterEject.toggleOnTrue(new StartEndCommand(
+      () -> {
+        m_shooter.shooterEject(0.8);
+      }, 
+      () -> {
+        m_shooter.shooterStop();
+      }));
 
     m_intakeToggle.onTrue(new InstantCommand(() -> {
       m_intake.toggleIntake();
