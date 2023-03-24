@@ -22,12 +22,20 @@ public class NateAndDrewProfile extends DriverProfileBase {
     @Override
     public Command getTeleopCommand() {
         return new RunCommand(() -> {
+            var factor = 1.0;
+
+            if (controller.getRawButtonPressed(0)) // which button?
+            {
+                factor = 0.50;
+            }
+
             var forward = -controller.getRawAxis(3);
             var reverse = controller.getRawAxis(2);
-            var speed = forward + reverse;
+            var speed = (forward + reverse) * factor;
+            var rotation = controller.getRawAxis(XboxController.Axis.kLeftX.value) * 0.75 * factor;
             drivetrain.arcadeDrive(
                 speed, 
-                controller.getRawAxis(XboxController.Axis.kLeftX.value) * 0.75
+                rotation
             );
         }, drivetrain);
     }
