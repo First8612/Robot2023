@@ -174,7 +174,7 @@ public class RobotContainer {
       m_conveyor.setSpeed(0);
     }));
 
-    m_shooterEject.toggleOnTrue(new StartEndCommand(
+    m_shooterEject.whileTrue(new StartEndCommand(
       () -> {
         m_shooter.shooterEject(0.8);
       }, 

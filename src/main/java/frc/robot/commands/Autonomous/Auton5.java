@@ -19,7 +19,7 @@ public class Auton5 extends SequentialCommandGroup {
             //drive past the charging station
             new DriveDistanceCommand(-4.5, drivetrain, gyro),
             //drive back to the charging station
-            new DriveDistanceCommand(1.75, drivetrain, gyro),
+            new DriveDistanceCommand(2, drivetrain, gyro),
             //balance on the charging station
             new BalanceCommand(gyro, drivetrain)
         );
