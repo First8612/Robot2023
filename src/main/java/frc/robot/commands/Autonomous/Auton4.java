@@ -48,13 +48,13 @@ public class Auton4 extends SequentialCommandGroup{
             // drive back a little less then we drove out
             new DriveDistanceCommand(4, drivetrain, gyro),
 
-            //turn
-            //new TurnDegreesCommand(0.3, 20, drivetrain, gyro, isRedAlliance),
+            //turn to face a different scoring area
+            //new TurnDegreesCommand(0.6, -50, drivetrain, gyro, isRedAlliance),
 
-            //stop the conveyor
-            new InstantCommand(() -> {
-                conveyor.setSpeed(0);
-            }),
+            // //stop the conveyor
+            // new InstantCommand(() -> {
+            //     conveyor.setSpeed(0);
+            // }),
 
             //shoot cube out
             new RunCommand(() -> {

@@ -46,6 +46,7 @@ public class TurnDegreesCommand extends CommandBase {
   public void execute() {
     double speed = Math.min(m_speed, turnController.calculate(m_gyro.getYaw()));
     m_drivetrain.arcadeDrive(0, speed);
+    System.out.println(m_gyro.getYaw());
   }
 
   // Called once the command ends or is interrupted.
