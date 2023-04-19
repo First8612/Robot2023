@@ -8,6 +8,7 @@ import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.FollowTrajectoryCommand;
 import frc.robot.commands.Autonomous.*;
 import frc.robot.driverProfiles.CarterProfile;
+import frc.robot.driverProfiles.DriveCompProfile;
 import frc.robot.driverProfiles.DriverProfileBase;
 import frc.robot.driverProfiles.NateAndDrewProfile;
 import frc.robot.driverProfiles.TankDriveProfile;
@@ -85,6 +86,7 @@ public class RobotContainer {
   private final DriverProfileBase m_carterProfile = new CarterProfile(m_robotDrive);
   private final DriverProfileBase m_nateProfile = new NateAndDrewProfile(m_robotDrive);
   private final DriverProfileBase m_tankProfile = new TankDriveProfile(m_robotDrive);
+  private final DriverProfileBase m_driveCompProfile = new DriveCompProfile(m_robotDrive);
   private DriverProfileBase m_selectedProfile;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -99,6 +101,7 @@ public class RobotContainer {
     m_driverChooser.setDefaultOption("Carter", m_carterProfile);
     m_driverChooser.addOption("Nate/Drew", m_nateProfile);
     m_driverChooser.addOption("Tank Drive", m_tankProfile);
+    m_driverChooser.addOption("For Drive Competition", m_driveCompProfile);
 
     SmartDashboard.putData("Driver Chooser", m_driverChooser);
 
