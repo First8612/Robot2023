@@ -26,8 +26,8 @@ public class NateAndDrewProfile extends DriverProfileBase {
             var reverse = controller.getRawAxis(2);
             var speed = forward + reverse;
             drivetrain.arcadeDrive(
-                speed, 
-                controller.getRawAxis(XboxController.Axis.kLeftX.value) * 0.75
+                speed * 0.7, 
+                controller.getRawAxis(XboxController.Axis.kLeftX.value) * 0.7
             );
         }, drivetrain);
     }

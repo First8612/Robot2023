@@ -35,7 +35,7 @@ public class DriveCompProfile extends DriverProfileBase {
     @Override
     public Command getTeleopCommand() {
         return new RunCommand(() -> {
-            drivetrain.arcadeDrive(controller.getRawAxis(Axis.kLeftY.value) * 0.5, controller.getRawAxis(Axis.kRightX.value) * 0.5);
+            drivetrain.arcadeDrive(controller.getRawAxis(Axis.kLeftY.value) * 0.7, controller.getRawAxis(Axis.kRightX.value) * 0.7);
         }, drivetrain);
     }
 
